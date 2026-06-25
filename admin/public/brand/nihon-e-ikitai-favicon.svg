@@ -1,0 +1,8 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Nihon e Ikitai favicon draft</title>
+  <rect x="4" y="4" width="56" height="56" rx="15" fill="#659287"/>
+  <circle cx="43" cy="19" r="9" fill="#B4232A"/>
+  <path d="M17 42L32 25L47 42" stroke="#D79A2B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M17 42L32 25L47 42" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M15 42H27" stroke="#263238" stroke-width="4" stroke-linecap="round"/>
+</svg>

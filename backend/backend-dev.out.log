@@ -1,0 +1,166 @@
+
+> nihon-e-ikitai-backend@0.1.0 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m9:35:02 AM[0m] Starting compilation in watch mode...
+
+[[90m9:35:09 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +27ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +3ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +2ms[39m
+[33m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [33m   WARN[39m [38;5;3m[FirebaseAdminService] [39m[33mFirebase Admin uses application default credentials.[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mContentModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m[38;5;3m +389ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMeController {/me}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/me, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKanaController {/kana}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kana/hiragana, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kana/katakana, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKotobaController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kotoba, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kotoba/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/kotoba, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/kotoba, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/kotoba/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/kotoba/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mQuestionsController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jlpt/questions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jlpt/question-sets, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jlpt/question-sets/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jft/questions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jft/question-sets, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jft/question-sets/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/question-sets, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/question-sets, POST} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/question-sets/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/question-sets/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/questions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/questions, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/questions/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/questions/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/questions, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/question-sets, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/question-sets, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/question-sets/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/question-sets/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/questions, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/questions/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/questions/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSswController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ssw/categories, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ssw/modules/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/categories, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/categories, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/categories/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/categories/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/modules, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/modules, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/modules/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/modules/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/questions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/questions, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/questions/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/questions/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mExamSchedulesController {/}:[39m[38;5;3m +2ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/exam-schedules, GET} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/exam-schedules/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/exam-schedules, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/exam-schedules, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/exam-schedules/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/exam-schedules/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mJapanNewsController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/japan-news, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/japan-news/:idOrSlug, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/japan-news, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/japan-news, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/japan-news/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/japan-news/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/admin/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 12296  - [39m06/24/2026, 9:35:11 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +15ms[39m
+[2J[3J[H[[90m1:09:58 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:10:00 PM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +17ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[33m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [33m   WARN[39m [38;5;3m[FirebaseAdminService] [39m[33mFirebase Admin uses application default credentials.[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mContentModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m[38;5;3m +170ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMeController {/me}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/me, GET} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKanaController {/kana}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kana/hiragana, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kana/katakana, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mKotobaController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kotoba, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/kotoba/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/kotoba, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/kotoba, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/kotoba/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/kotoba/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mQuestionsController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jlpt/questions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jlpt/question-sets, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jlpt/question-sets/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jft/questions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jft/question-sets, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/jft/question-sets/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/question-sets, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/question-sets, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/question-sets/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/question-sets/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/questions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/questions, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/questions/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jlpt/questions/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/questions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/question-sets, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/question-sets, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/question-sets/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/question-sets/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/questions, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/questions/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/jft/questions/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mSswController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ssw/categories, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/ssw/modules/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/categories, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/categories, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/categories/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/categories/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/modules, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/modules, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/modules/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/modules/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/questions, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/questions, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/questions/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/ssw/questions/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mExamSchedulesController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/exam-schedules, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/exam-schedules/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/exam-schedules, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/exam-schedules, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/exam-schedules/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/exam-schedules/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mJapanNewsController {/}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/japan-news, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/japan-news/:idOrSlug, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/japan-news, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/japan-news, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/japan-news/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/japan-news/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/admin/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/admin/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 1072  - [39m06/24/2026, 1:10:01 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +21ms[39m

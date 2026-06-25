@@ -1,0 +1,69 @@
+<svg width="1120" height="720" viewBox="0 0 1120 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Nihon e Ikitai logo draft preview</title>
+  <rect width="1120" height="720" fill="#E6F0DD"/>
+  <text x="56" y="76" fill="#263238" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" letter-spacing="0">Nihon e Ikitai - Logo Draft</text>
+  <text x="58" y="108" fill="#60746D" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="0">Palette: sage, soft mint, Japanese red, warm gold</text>
+
+  <rect x="56" y="150" width="300" height="420" rx="18" fill="#FFFFFF" stroke="#C9DBCE"/>
+  <text x="86" y="198" fill="#263238" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800">App icon</text>
+  <text x="86" y="224" fill="#60746D" font-family="Arial, Helvetica, sans-serif" font-size="15">Square symbol for Flutter launcher</text>
+  <g transform="translate(96 260) scale(0.19)">
+    <rect width="1024" height="1024" rx="228" fill="#659287"/>
+    <circle cx="694" cy="292" r="128" fill="#B4232A"/>
+    <path d="M235 661C344 486 497 374 693 319" stroke="#E6F0DD" stroke-width="86" stroke-linecap="round"/>
+    <path d="M235 661C344 486 497 374 693 319" stroke="#9CBCB0" stroke-width="44" stroke-linecap="round"/>
+    <path d="M342 740L512 531L698 740" stroke="#D79A2B" stroke-width="96" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M342 740L512 531L698 740" stroke="#FFFFFF" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M228 664H367C421 664 473 686 511 725L540 754" stroke="#263238" stroke-width="46" stroke-linecap="round"/>
+    <path d="M221 667C221 607 270 558 330 558H395V804H330C270 804 221 755 221 695V667Z" fill="#FFFFFF" stroke="#E6F0DD" stroke-width="34"/>
+    <path d="M395 558H460C520 558 569 607 569 667V804H504C444 804 395 755 395 695V558Z" fill="#FFFFFF" stroke="#E6F0DD" stroke-width="34"/>
+    <path d="M304 637H362" stroke="#9CBCB0" stroke-width="24" stroke-linecap="round"/>
+    <path d="M446 637H504" stroke="#9CBCB0" stroke-width="24" stroke-linecap="round"/>
+  </g>
+
+  <rect x="410" y="150" width="654" height="180" rx="18" fill="#FFFFFF" stroke="#C9DBCE"/>
+  <text x="444" y="198" fill="#263238" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800">Admin logo</text>
+  <text x="444" y="224" fill="#60746D" font-family="Arial, Helvetica, sans-serif" font-size="15">Horizontal logo for Next.js admin sidebar or login screen</text>
+  <g transform="translate(444 250)">
+    <rect width="420" height="92" rx="16" fill="#FFFFFF"/>
+    <rect x="10" y="10" width="72" height="72" rx="18" fill="#E6F0DD"/>
+    <rect x="10" y="10" width="72" height="72" rx="18" stroke="#9CBCB0" stroke-width="2"/>
+    <circle cx="56" cy="30" r="10" fill="#B4232A"/>
+    <path d="M26 57L45 36L65 57" stroke="#D79A2B" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M26 57L45 36L65 57" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 57H40" stroke="#263238" stroke-width="4.5" stroke-linecap="round"/>
+    <text x="102" y="42" fill="#263238" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800" letter-spacing="0">Nihon e Ikitai</text>
+    <text x="103" y="66" fill="#60746D" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="1.8">LEARNING CENTER ADMIN</text>
+    <path d="M360 28C376 28 389 41 389 57" stroke="#659287" stroke-width="5" stroke-linecap="round"/>
+    <path d="M360 57C376 57 389 44 389 28" stroke="#D79A2B" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <rect x="410" y="372" width="312" height="198" rx="18" fill="#FFFFFF" stroke="#C9DBCE"/>
+  <text x="444" y="420" fill="#263238" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800">Brand mark</text>
+  <g transform="translate(488 438) scale(0.42)">
+    <rect x="16" y="16" width="208" height="208" rx="48" fill="#E6F0DD"/>
+    <rect x="16" y="16" width="208" height="208" rx="48" stroke="#9CBCB0" stroke-width="4"/>
+    <circle cx="165" cy="72" r="31" fill="#B4232A"/>
+    <path d="M60 151C82 118 111 95 149 82" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round"/>
+    <path d="M60 151C82 118 111 95 149 82" stroke="#659287" stroke-width="10" stroke-linecap="round"/>
+    <path d="M92 171L122 135L158 170" stroke="#D79A2B" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M92 171L122 135L158 170" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M60 151H91C103 151 114 156 122 165L128 171" stroke="#263238" stroke-width="9" stroke-linecap="round"/>
+    <path d="M58 154C58 142 68 132 80 132H94V184H80C68 184 58 174 58 162V154Z" fill="#FFFFFF" stroke="#659287" stroke-width="7"/>
+    <path d="M94 132H108C120 132 130 142 130 154V184H116C104 184 94 174 94 162V132Z" fill="#FFFFFF" stroke="#659287" stroke-width="7"/>
+    <path d="M76 149H88" stroke="#9CBCB0" stroke-width="5" stroke-linecap="round"/>
+    <path d="M106 149H118" stroke="#9CBCB0" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <rect x="752" y="372" width="312" height="198" rx="18" fill="#FFFFFF" stroke="#C9DBCE"/>
+  <text x="786" y="420" fill="#263238" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800">Favicon</text>
+  <g transform="translate(864 456) scale(1.25)">
+    <rect x="4" y="4" width="56" height="56" rx="15" fill="#659287"/>
+    <circle cx="43" cy="19" r="9" fill="#B4232A"/>
+    <path d="M17 42L32 25L47 42" stroke="#D79A2B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17 42L32 25L47 42" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 42H27" stroke="#263238" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <text x="56" y="642" fill="#60746D" font-family="Arial, Helvetica, sans-serif" font-size="16" letter-spacing="0">Concept: open book + route to Japan + red sun. Designed to stay readable at small sizes.</text>
+</svg>

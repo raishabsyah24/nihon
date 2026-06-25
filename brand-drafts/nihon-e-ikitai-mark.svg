@@ -1,0 +1,15 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Nihon e Ikitai brand mark draft</title>
+  <rect x="16" y="16" width="208" height="208" rx="48" fill="#E6F0DD"/>
+  <rect x="16" y="16" width="208" height="208" rx="48" stroke="#9CBCB0" stroke-width="4"/>
+  <circle cx="165" cy="72" r="31" fill="#B4232A"/>
+  <path d="M60 151C82 118 111 95 149 82" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round"/>
+  <path d="M60 151C82 118 111 95 149 82" stroke="#659287" stroke-width="10" stroke-linecap="round"/>
+  <path d="M92 171L122 135L158 170" stroke="#D79A2B" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M92 171L122 135L158 170" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M60 151H91C103 151 114 156 122 165L128 171" stroke="#263238" stroke-width="9" stroke-linecap="round"/>
+  <path d="M58 154C58 142 68 132 80 132H94V184H80C68 184 58 174 58 162V154Z" fill="#FFFFFF" stroke="#659287" stroke-width="7"/>
+  <path d="M94 132H108C120 132 130 142 130 154V184H116C104 184 94 174 94 162V132Z" fill="#FFFFFF" stroke="#659287" stroke-width="7"/>
+  <path d="M76 149H88" stroke="#9CBCB0" stroke-width="5" stroke-linecap="round"/>
+  <path d="M106 149H118" stroke="#9CBCB0" stroke-width="5" stroke-linecap="round"/>
+</svg>

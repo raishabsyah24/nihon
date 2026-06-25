@@ -1,0 +1,14 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Nihon e Ikitai app icon draft</title>
+  <rect width="1024" height="1024" rx="228" fill="#659287"/>
+  <circle cx="694" cy="292" r="128" fill="#B4232A"/>
+  <path d="M235 661C344 486 497 374 693 319" stroke="#E6F0DD" stroke-width="86" stroke-linecap="round"/>
+  <path d="M235 661C344 486 497 374 693 319" stroke="#9CBCB0" stroke-width="44" stroke-linecap="round"/>
+  <path d="M342 740L512 531L698 740" stroke="#D79A2B" stroke-width="96" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M342 740L512 531L698 740" stroke="#FFFFFF" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M228 664H367C421 664 473 686 511 725L540 754" stroke="#263238" stroke-width="46" stroke-linecap="round"/>
+  <path d="M221 667C221 607 270 558 330 558H395V804H330C270 804 221 755 221 695V667Z" fill="#FFFFFF" stroke="#E6F0DD" stroke-width="34"/>
+  <path d="M395 558H460C520 558 569 607 569 667V804H504C444 804 395 755 395 695V558Z" fill="#FFFFFF" stroke="#E6F0DD" stroke-width="34"/>
+  <path d="M304 637H362" stroke="#9CBCB0" stroke-width="24" stroke-linecap="round"/>
+  <path d="M446 637H504" stroke="#9CBCB0" stroke-width="24" stroke-linecap="round"/>
+</svg>

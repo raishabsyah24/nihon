@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum KanaType {
+  HIRAGANA
+  KATAKANA
+}
+
+enum QuestionType {
+  JLPT
+  JFT
+  SSW
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum ExamType {
+  JFT
+  JLPT
+  SSW
+}
+
+model User {
+  id          String   @id @default(cuid())
+  firebaseUid String  @unique
+  email       String?
+  phoneNumber String?
+  displayName String?
+  photoUrl    String?  @db.VarChar(512)
+  role        Role    @default(USER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Kana {
+  id          String   @id @default(cuid())
+  type        KanaType
+  character   String
+  romaji      String
+  strokeOrder Json?
+  example     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([type, character])
+  @@index([type])
+}
+
+model Kotoba {
+  id              String        @id @default(cuid())
+  kanji           String?
+  kana            String
+  furigana        String?
+  romaji          String?
+  meaning         String
+  exampleSentence String?       @db.Text
+  status          PublishStatus @default(DRAFT)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Question {
+  id          String        @id @default(cuid())
+  type        QuestionType
+  level       String?
+  category    String?
+  questionSetId String?
+  questionSet   QuestionSet? @relation(fields: [questionSetId], references: [id], onDelete: SetNull)
+  prompt      String        @db.Text
+  options     Json
+  answerIndex Int
+  explanation String?       @db.Text
+  sortOrder   Int           @default(0)
+  status      PublishStatus @default(DRAFT)
+  sswModuleId String?
+  sswModule   SswModule?    @relation(fields: [sswModuleId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([type, level, category])
+  @@index([questionSetId])
+  @@index([sswModuleId])
+}
+
+model QuestionSet {
+  id              String        @id @default(cuid())
+  type            QuestionType
+  title           String
+  slug            String        @unique
+  description     String?       @db.Text
+  level           String?
+  category        String?
+  durationMinutes Int?
+  status          PublishStatus @default(DRAFT)
+  questions       Question[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([type, level, category])
+}
+
+model SswCategory {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  description String?       @db.Text
+  status      PublishStatus @default(DRAFT)
+  modules     SswModule[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model SswModule {
+  id          String        @id @default(cuid())
+  categoryId  String
+  category    SswCategory   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  title       String
+  slug        String        @unique
+  summary     String?       @db.Text
+  content     String        @db.Text
+  vocabulary  Json?
+  examples    Json?
+  status      PublishStatus @default(DRAFT)
+  questions   Question[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([categoryId])
+}
+
+model ExamSchedule {
+  id          String        @id @default(cuid())
+  type        ExamType
+  title       String
+  location    String?
+  startsAt    DateTime
+  endsAt      DateTime?
+  registerUrl String?       @db.VarChar(512)
+  description String?       @db.Text
+  status      PublishStatus @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([type, startsAt])
+}
+
+model JapanNews {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  thumbnail   String?       @db.VarChar(512)
+  body        String        @db.Text
+  category    String?
+  publishedAt DateTime?
+  status      PublishStatus @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
