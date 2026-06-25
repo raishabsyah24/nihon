@@ -74,7 +74,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setLoading(true);
-      setError(null);
 
       try {
         if (!user) {
@@ -83,6 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
+        setError(null);
         await loadBackendProfile(user);
       } catch (err) {
         setError(errorMessage(err));
