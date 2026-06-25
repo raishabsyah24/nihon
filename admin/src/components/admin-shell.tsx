@@ -107,7 +107,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <Shield size={18} />
             <strong>Admin</strong>
           </div>
-          <span className="muted">{profile?.email ?? profile?.phoneNumber}</span>
+          <span className="muted">{profile?.email ?? profile?.displayName}</span>
         </header>
         <main className="content">{children}</main>
       </div>

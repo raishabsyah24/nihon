@@ -1,14 +1,11 @@
 "use client";
 
 import {
-  ConfirmationResult,
   GoogleAuthProvider,
-  RecaptchaVerifier,
   User,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signInWithPhoneNumber,
   signInWithPopup,
   signOut as firebaseSignOut
 } from "firebase/auth";
@@ -28,7 +25,6 @@ export type AdminProfile = {
   id: string;
   role: string;
   email?: string | null;
-  phoneNumber?: string | null;
   displayName?: string | null;
   photoUrl?: string | null;
 };
@@ -43,9 +39,6 @@ type AuthContextValue = {
   loginWithGoogle: () => Promise<void>;
   loginWithEmail: (email: string, password: string) => Promise<void>;
   registerWithEmail: (email: string, password: string) => Promise<void>;
-  sendPhoneOtp: (phoneNumber: string) => Promise<void>;
-  verifyPhoneOtp: (code: string) => Promise<void>;
-  useDemoAdmin: () => void;
   signOut: () => Promise<void>;
 };
 
@@ -57,7 +50,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [confirmation, setConfirmation] = useState<ConfirmationResult | null>(null);
   const firebaseConfigured = hasFirebaseConfig();
 
   const loadBackendProfile = useCallback(async (user: User) => {
@@ -144,43 +136,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [guarded]
   );
 
-  const sendPhoneOtp = useCallback(
-    async (phoneNumber: string) => {
-      await guarded(async () => {
-        const auth = requireAuth();
-        const verifier = new RecaptchaVerifier(auth, "admin-recaptcha", {
-          size: "invisible"
-        });
-        const result = await signInWithPhoneNumber(auth, phoneNumber.trim(), verifier);
-        setConfirmation(result);
-      });
-    },
-    [guarded]
-  );
-
-  const verifyPhoneOtp = useCallback(
-    async (code: string) => {
-      await guarded(async () => {
-        if (!confirmation) {
-          throw new Error("Kirim OTP terlebih dahulu.");
-        }
-        await confirmation.confirm(code.trim());
-      });
-    },
-    [confirmation, guarded]
-  );
-
-  const useDemoAdmin = useCallback(() => {
-    setProfile({
-      id: "demo-admin",
-      role: "ADMIN",
-      email: "admin@nihoneikitai.local",
-      displayName: "Demo Admin"
-    });
-    setToken(null);
-    setError(null);
-  }, []);
-
   const signOut = useCallback(async () => {
     await guarded(async () => {
       const auth = getFirebaseAuth();
@@ -203,9 +158,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loginWithGoogle,
       loginWithEmail,
       registerWithEmail,
-      sendPhoneOtp,
-      verifyPhoneOtp,
-      useDemoAdmin,
       signOut
     }),
     [
@@ -218,9 +170,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loginWithGoogle,
       loginWithEmail,
       registerWithEmail,
-      sendPhoneOtp,
-      verifyPhoneOtp,
-      useDemoAdmin,
       signOut
     ]
   );

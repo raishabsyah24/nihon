@@ -12,14 +12,12 @@ export class UsersService {
       where: { firebaseUid: decoded.uid },
       update: {
         email: decoded.email,
-        phoneNumber: decoded.phone_number,
         displayName: decoded.name,
         photoUrl: decoded.picture,
       },
       create: {
         firebaseUid: decoded.uid,
         email: decoded.email,
-        phoneNumber: decoded.phone_number,
         displayName: decoded.name,
         photoUrl: decoded.picture,
         role: Role.USER,

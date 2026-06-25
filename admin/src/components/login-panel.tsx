@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyRound, Mail, Phone, ShieldCheck } from "lucide-react";
+import { KeyRound, Mail, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -12,15 +12,10 @@ export function LoginPanel() {
     firebaseConfigured,
     loginWithGoogle,
     loginWithEmail,
-    registerWithEmail,
-    sendPhoneOtp,
-    verifyPhoneOtp,
-    useDemoAdmin
+    registerWithEmail
   } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
 
   return (
     <main className="auth-screen">
@@ -36,7 +31,9 @@ export function LoginPanel() {
             unoptimized
           />
           <h1 style={{ marginTop: 18 }}>Masuk Admin</h1>
-          <p className="muted">Konten kursus, soal, jadwal, dan berita dikelola dari sini.</p>
+          <p className="muted">
+            Konten kursus, soal, jadwal, dan berita dikelola dari sini.
+          </p>
         </div>
 
         <div className="login-grid">
@@ -89,49 +86,6 @@ export function LoginPanel() {
               Daftar
             </button>
           </div>
-
-          <div className="field">
-            <label htmlFor="phone">Nomor HP</label>
-            <input
-              className="input"
-              id="phone"
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-              placeholder="+628123456789"
-            />
-          </div>
-          <div className="button-row">
-            <button
-              className="btn btn-secondary"
-              disabled={busy}
-              onClick={() => sendPhoneOtp(phone)}
-            >
-              <Phone size={18} />
-              Kirim OTP
-            </button>
-          </div>
-          <div className="field">
-            <label htmlFor="otp">Kode OTP</label>
-            <input
-              className="input"
-              id="otp"
-              value={otp}
-              onChange={(event) => setOtp(event.target.value)}
-            />
-          </div>
-          <button
-            className="btn btn-ghost"
-            disabled={busy}
-            onClick={() => verifyPhoneOtp(otp)}
-          >
-            <ShieldCheck size={18} />
-            Verifikasi OTP
-          </button>
-
-          <button className="btn btn-ghost" disabled={busy} onClick={useDemoAdmin}>
-            Demo Admin
-          </button>
-          <div id="admin-recaptcha" />
         </div>
       </section>
     </main>

@@ -8,7 +8,10 @@ import 'src/services/auth_controller.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final authController = AuthController(apiBaseUrl: AppConfig.apiBaseUrl);
+  final authController = AuthController(
+    apiBaseUrl: AppConfig.apiBaseUrl,
+    googleServerClientId: AppConfig.googleServerClientId,
+  );
   await authController.initialize();
 
   final apiClient = ApiClient(

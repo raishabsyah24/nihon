@@ -5,8 +5,6 @@ import '../common/async_content.dart';
 
 enum _AuthMode { login, register }
 
-enum _AuthMethod { email, phone }
-
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key, required this.authController});
 
@@ -20,11 +18,8 @@ class _AuthScreenState extends State<AuthScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _otpController = TextEditingController();
 
   _AuthMode _mode = _AuthMode.login;
-  _AuthMethod _method = _AuthMethod.email;
   String? _localError;
 
   @override
@@ -32,8 +27,6 @@ class _AuthScreenState extends State<AuthScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _phoneController.dispose();
-    _otpController.dispose();
     super.dispose();
   }
 
@@ -60,28 +53,6 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   const SizedBox(height: 14),
                 ],
-                SegmentedButton<_AuthMethod>(
-                  segments: const [
-                    ButtonSegment(
-                      value: _AuthMethod.email,
-                      icon: Icon(Icons.mail_outline),
-                      label: Text('Email'),
-                    ),
-                    ButtonSegment(
-                      value: _AuthMethod.phone,
-                      icon: Icon(Icons.phone_outlined),
-                      label: Text('Nomor HP'),
-                    ),
-                  ],
-                  selected: {_method},
-                  onSelectionChanged: disabled
-                      ? null
-                      : (value) => setState(() {
-                          _method = value.first;
-                          _localError = null;
-                        }),
-                ),
-                const SizedBox(height: 18),
                 DecoratedBox(
                   decoration: BoxDecoration(
                     color: colorScheme.surface,
@@ -101,22 +72,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               ?.copyWith(fontWeight: FontWeight.w800),
                         ),
                         const SizedBox(height: 14),
-                        if (_method == _AuthMethod.email)
-                          _EmailFields(
-                            emailController: _emailController,
-                            passwordController: _passwordController,
-                            confirmPasswordController:
-                                _confirmPasswordController,
-                            showConfirm: _mode == _AuthMode.register,
-                          )
-                        else
-                          _PhoneFields(
-                            phoneController: _phoneController,
-                            otpController: _otpController,
-                            disabled: disabled,
-                            onSendOtp: () =>
-                                auth.sendPhoneCode(_phoneController.text),
-                          ),
+                        _EmailFields(
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          confirmPasswordController: _confirmPasswordController,
+                          showConfirm: _mode == _AuthMode.register,
+                        ),
                         const SizedBox(height: 14),
                         FilledButton.icon(
                           onPressed: disabled ? null : _submit,
@@ -142,8 +103,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             _localError = null;
                           }),
                         ),
-                        if (_mode == _AuthMode.login &&
-                            _method == _AuthMethod.email) ...[
+                        if (_mode == _AuthMode.login) ...[
                           const SizedBox(height: 10),
                           OutlinedButton.icon(
                             onPressed: disabled ? null : auth.signInWithGoogle,
@@ -155,8 +115,6 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                _DemoAccess(authController: auth),
               ],
             ),
           ),
@@ -168,28 +126,23 @@ class _AuthScreenState extends State<AuthScreen> {
   void _submit() {
     setState(() => _localError = null);
 
-    if (_method == _AuthMethod.email) {
-      if (_mode == _AuthMode.register &&
-          _passwordController.text != _confirmPasswordController.text) {
-        setState(() => _localError = 'Konfirmasi password belum sama.');
-        return;
-      }
-
-      if (_mode == _AuthMode.login) {
-        widget.authController.signInWithEmail(
-          _emailController.text,
-          _passwordController.text,
-        );
-      } else {
-        widget.authController.registerWithEmail(
-          _emailController.text,
-          _passwordController.text,
-        );
-      }
+    if (_mode == _AuthMode.register &&
+        _passwordController.text != _confirmPasswordController.text) {
+      setState(() => _localError = 'Konfirmasi password belum sama.');
       return;
     }
 
-    widget.authController.verifyPhoneCode(_otpController.text);
+    if (_mode == _AuthMode.login) {
+      widget.authController.signInWithEmail(
+        _emailController.text,
+        _passwordController.text,
+      );
+    } else {
+      widget.authController.registerWithEmail(
+        _emailController.text,
+        _passwordController.text,
+      );
+    }
   }
 }
 
@@ -297,55 +250,6 @@ class _EmailFields extends StatelessWidget {
   }
 }
 
-class _PhoneFields extends StatelessWidget {
-  const _PhoneFields({
-    required this.phoneController,
-    required this.otpController,
-    required this.disabled,
-    required this.onSendOtp,
-  });
-
-  final TextEditingController phoneController;
-  final TextEditingController otpController;
-  final bool disabled;
-  final VoidCallback onSendOtp;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: phoneController,
-          keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(
-            labelText: 'Nomor HP internasional',
-            hintText: '+628123456789',
-            prefixIcon: Icon(Icons.phone_outlined),
-          ),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton.tonalIcon(
-            onPressed: disabled ? null : onSendOtp,
-            icon: const Icon(Icons.sms_outlined),
-            label: const Text('Kirim OTP'),
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: otpController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Kode OTP',
-            prefixIcon: Icon(Icons.password_outlined),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _ModeSwitch extends StatelessWidget {
   const _ModeSwitch({
     required this.mode,
@@ -376,37 +280,6 @@ class _ModeSwitch extends StatelessWidget {
               ? null
               : () => onChanged(isLogin ? _AuthMode.register : _AuthMode.login),
           child: Text(isLogin ? 'Register' : 'Masuk'),
-        ),
-      ],
-    );
-  }
-}
-
-class _DemoAccess extends StatelessWidget {
-  const _DemoAccess({required this.authController});
-
-  final AuthController authController;
-
-  @override
-  Widget build(BuildContext context) {
-    final disabled = authController.isBusy;
-
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        TextButton(
-          onPressed: disabled
-              ? null
-              : () => authController.useDemoUser(admin: false),
-          child: const Text('Demo User'),
-        ),
-        TextButton(
-          onPressed: disabled
-              ? null
-              : () => authController.useDemoUser(admin: true),
-          child: const Text('Demo Admin'),
         ),
       ],
     );

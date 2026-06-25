@@ -4,7 +4,7 @@ Web admin Next.js untuk mengelola konten dinamis Nihon e Ikitai.
 
 ## Fitur Phase 4-8
 
-- Login Firebase Auth menggunakan Google, email/password, dan nomor HP/OTP.
+- Login Firebase Auth menggunakan Google dan email/password.
 - Dashboard admin dengan sidebar.
 - CRUD Kotoba.
 - CRUD Soal JFT.

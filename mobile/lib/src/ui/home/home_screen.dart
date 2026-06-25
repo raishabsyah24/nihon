@@ -227,8 +227,7 @@ class _DashboardTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final displayName =
-        user?.displayName ?? user?.email ?? user?.phoneNumber ?? 'Minasan';
+    final displayName = user?.displayName ?? user?.email ?? 'Minasan';
     final featured = actions.take(4).toList();
 
     return ListView(

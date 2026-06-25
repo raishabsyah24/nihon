@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "134177451774",
+    "project_id": "nihon-e-ikitai",
+    "storage_bucket": "nihon-e-ikitai.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:134177451774:android:306ec8ec93a53dd601bfaf",
+        "android_client_info": {
+          "package_name": "id.nihoneikitai.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "134177451774-fgot917eab2kq0f53fmad5kbrjsjkjuq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.nihoneikitai.mobile",
+            "certificate_hash": "dae6f68654c3c94e37a1548b2f688fc8e2b51707"
+          }
+        },
+        {
+          "client_id": "134177451774-hr5noreslca4j96281c9mje7ipgoljq3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMmySiaHiQSUmRDPZHB0vlXVmBjxwygCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "134177451774-hr5noreslca4j96281c9mje7ipgoljq3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "134177451774-0ikek91bho04oldddjs2dpp0fl36veni.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "id.nihoneikitai.mobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

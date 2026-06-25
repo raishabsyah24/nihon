@@ -6,7 +6,7 @@ import { apiFetch, type JsonRecord } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { formatDateTime, stringifyCell } from "@/lib/format";
 
-const columns = ["displayName", "email", "phoneNumber", "role", "createdAt"];
+const columns = ["displayName", "email", "role", "createdAt"];
 
 export function UsersPage() {
   const { token } = useAuth();

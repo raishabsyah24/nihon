@@ -70,7 +70,6 @@ class ProfileContent extends StatelessWidget {
                           Text(
                             user.displayName ??
                                 user.email ??
-                                user.phoneNumber ??
                                 'Pengguna Nihon e Ikitai',
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w800),
@@ -88,11 +87,6 @@ class ProfileContent extends StatelessWidget {
                                 InfoPill(
                                   label: user.email!,
                                   icon: Icons.mail_outline,
-                                ),
-                              if (user.phoneNumber != null)
-                                InfoPill(
-                                  label: user.phoneNumber!,
-                                  icon: Icons.phone_outlined,
                                 ),
                             ],
                           ),

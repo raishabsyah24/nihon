@@ -33,7 +33,6 @@ class AppUser {
     required this.id,
     required this.role,
     this.email,
-    this.phoneNumber,
     this.displayName,
     this.photoUrl,
   });
@@ -41,7 +40,6 @@ class AppUser {
   final String id;
   final String role;
   final String? email;
-  final String? phoneNumber;
   final String? displayName;
   final String? photoUrl;
 
@@ -52,7 +50,6 @@ class AppUser {
       id: jsonRequiredString(json['id']),
       role: jsonRequiredString(json['role'], fallback: 'USER'),
       email: jsonString(json['email']),
-      phoneNumber: jsonString(json['phoneNumber']),
       displayName: jsonString(json['displayName']),
       photoUrl: jsonString(json['photoUrl']),
     );

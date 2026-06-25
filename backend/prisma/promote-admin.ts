@@ -5,16 +5,15 @@ const prisma = new PrismaClient();
 type Args = {
   firebaseUid?: string;
   email?: string;
-  phoneNumber?: string;
   displayName?: string;
 };
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  if (!args.firebaseUid && !args.email && !args.phoneNumber) {
+  if (!args.firebaseUid && !args.email) {
     throw new Error(
-      "Use --firebaseUid=<uid>, --email=<email>, or --phoneNumber=<phone> to select a user.",
+      "Use --firebaseUid=<uid> or --email=<email> to select a user.",
     );
   }
 
@@ -26,12 +25,11 @@ async function main() {
       data: {
         role: Role.ADMIN,
         email: args.email ?? existing.email,
-        phoneNumber: args.phoneNumber ?? existing.phoneNumber,
         displayName: args.displayName ?? existing.displayName,
       },
     });
     console.log(
-      `Promoted admin: ${user.id} (${user.email ?? user.phoneNumber ?? user.firebaseUid})`,
+      `Promoted admin: ${user.id} (${user.email ?? user.firebaseUid})`,
     );
     return;
   }
@@ -46,15 +44,12 @@ async function main() {
     data: {
       firebaseUid: args.firebaseUid,
       email: args.email,
-      phoneNumber: args.phoneNumber,
       displayName: args.displayName ?? "Nihon e Ikitai Admin",
       role: Role.ADMIN,
     },
   });
 
-  console.log(
-    `Created admin: ${user.id} (${user.email ?? user.phoneNumber ?? user.firebaseUid})`,
-  );
+  console.log(`Created admin: ${user.id} (${user.email ?? user.firebaseUid})`);
 }
 
 function parseArgs(argv: string[]): Args {
@@ -76,7 +71,7 @@ function parseArgs(argv: string[]): Args {
 
     if (
       key in args ||
-      ["firebaseUid", "email", "phoneNumber", "displayName"].includes(key)
+      ["firebaseUid", "email", "displayName"].includes(key)
     ) {
       args[key] = value;
     }
@@ -92,10 +87,6 @@ async function findExistingUser(args: Args) {
 
   if (args.email) {
     return prisma.user.findFirst({ where: { email: args.email } });
-  }
-
-  if (args.phoneNumber) {
-    return prisma.user.findFirst({ where: { phoneNumber: args.phoneNumber } });
   }
 
   return null;

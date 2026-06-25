@@ -4,9 +4,9 @@ Aplikasi mobile Flutter untuk pengguna Nihon e Ikitai.
 
 ## Fitur Phase 3-8
 
-- Login menggunakan Google, email/password, dan nomor HP/OTP melalui Firebase Auth.
+- Login menggunakan Google dan email/password melalui Firebase Auth.
 - App selalu membuka halaman login/register terlebih dahulu.
-- Login dan register memakai pilihan mode email atau nomor HP/OTP.
+- Login dan register memakai email/password, dengan opsi login Google.
 - Dashboard utama memakai bottom navigation: Beranda, Belajar, Ujian, Info, dan Profil.
 - Menu utama: Hiragana, Katakana, Kotoba, Soal JFT, Soal JLPT, SSW, Jadwal Ujian, Berita Jepang, dan Profil.
 - Hiragana dan Katakana memiliki halaman detail dan area cara menulis.
@@ -36,14 +36,24 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:4000
 
 Jika IP Wi-Fi komputer berubah, ganti nilai `API_BASE_URL` saat menjalankan Flutter atau update default di `lib/src/config/app_config.dart`.
 
+Untuk login Google di Android, tambahkan Web client ID Firebase:
+
+```bash
+flutter run --dart-define=API_BASE_URL=http://192.168.0.101:4000 --dart-define=GOOGLE_SERVER_CLIENT_ID=WEB_CLIENT_ID_FIREBASE
+```
+
+Saat build APK release:
+
+```bash
+flutter build apk --release --dart-define=API_BASE_URL=https://api-domain-kamu.vercel.app --dart-define=GOOGLE_SERVER_CLIENT_ID=WEB_CLIENT_ID_FIREBASE
+```
+
 ## Firebase
 
-Firebase belum dikonfigurasi otomatis. Tambahkan konfigurasi Firebase menggunakan FlutterFire CLI atau file konfigurasi platform:
+Firebase dikonfigurasi menggunakan FlutterFire CLI dan file konfigurasi platform:
 
 - Android: `android/app/google-services.json`
 - iOS: `ios/Runner/GoogleService-Info.plist`
-
-Jika Firebase belum aktif, app tetap bisa dibuka dan tombol demo user/admin bisa dipakai untuk melihat flow UI.
 
 ## Role Admin di Mobile
 

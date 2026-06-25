@@ -6,7 +6,7 @@ import 'package:nihon_e_ikitai_mobile/src/services/api_client.dart';
 import 'package:nihon_e_ikitai_mobile/src/services/auth_controller.dart';
 
 void main() {
-  testWidgets('starts on login with email and phone options', (
+  testWidgets('starts on login with email and google options', (
     WidgetTester tester,
   ) async {
     final authController = AuthController(apiBaseUrl: 'http://localhost:4000');
@@ -21,7 +21,7 @@ void main() {
 
     expect(find.text('Masuk ke Nihon e Ikitai'), findsOneWidget);
     expect(find.text('Email'), findsWidgets);
-    expect(find.text('Nomor HP'), findsOneWidget);
+    expect(find.text('Masuk dengan Google'), findsOneWidget);
     expect(find.text('Register'), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
   });

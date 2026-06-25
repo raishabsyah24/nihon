@@ -6,18 +6,22 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
+import '../../firebase_options.dart';
 import '../models/app_models.dart';
 
 class AuthController extends ChangeNotifier {
-  AuthController({required this.apiBaseUrl});
+  AuthController({
+    required this.apiBaseUrl,
+    this.googleServerClientId = '',
+  });
 
   final String apiBaseUrl;
+  final String googleServerClientId;
 
   bool _firebaseReady = false;
   bool _isBusy = false;
   bool _googleReady = false;
   String? _errorMessage;
-  String? _phoneVerificationId;
   AppUser? _profile;
 
   bool get firebaseReady => _firebaseReady;
@@ -28,9 +32,10 @@ class AuthController extends ChangeNotifier {
 
   Future<void> initialize() async {
     try {
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
       _firebaseReady = true;
-      await _initializeGoogle();
 
       firebase.FirebaseAuth.instance.authStateChanges().listen((user) async {
         if (user == null) {
@@ -106,47 +111,6 @@ class AuthController extends ChangeNotifier {
     });
   }
 
-  Future<void> sendPhoneCode(String phoneNumber) async {
-    await _guarded(() async {
-      _requireFirebase();
-      await firebase.FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phoneNumber.trim(),
-        verificationCompleted: (credential) async {
-          await firebase.FirebaseAuth.instance.signInWithCredential(credential);
-          await refreshProfile();
-        },
-        verificationFailed: (error) {
-          _errorMessage = error.message;
-          notifyListeners();
-        },
-        codeSent: (verificationId, _) {
-          _phoneVerificationId = verificationId;
-          notifyListeners();
-        },
-        codeAutoRetrievalTimeout: (verificationId) {
-          _phoneVerificationId = verificationId;
-        },
-      );
-    });
-  }
-
-  Future<void> verifyPhoneCode(String smsCode) async {
-    await _guarded(() async {
-      _requireFirebase();
-      final verificationId = _phoneVerificationId;
-      if (verificationId == null) {
-        throw StateError('Kirim kode OTP terlebih dahulu.');
-      }
-
-      final credential = firebase.PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: smsCode.trim(),
-      );
-      await firebase.FirebaseAuth.instance.signInWithCredential(credential);
-      await refreshProfile();
-    });
-  }
-
   Future<void> refreshProfile() async {
     if (!_firebaseReady) {
       return;
@@ -208,7 +172,17 @@ class AuthController extends ChangeNotifier {
     if (_googleReady) {
       return;
     }
-    await GoogleSignIn.instance.initialize();
+    final serverClientId = googleServerClientId.trim();
+    if (!kIsWeb &&
+        defaultTargetPlatform == TargetPlatform.android &&
+        serverClientId.isEmpty) {
+      throw StateError(
+        'GOOGLE_SERVER_CLIENT_ID belum diisi. Gunakan Web client ID Firebase saat menjalankan atau build APK.',
+      );
+    }
+    await GoogleSignIn.instance.initialize(
+      serverClientId: serverClientId.isEmpty ? null : serverClientId,
+    );
     _googleReady = true;
   }
 
@@ -240,7 +214,6 @@ class AuthController extends ChangeNotifier {
       id: user.uid,
       role: 'USER',
       email: user.email,
-      phoneNumber: user.phoneNumber,
       displayName: user.displayName,
       photoUrl: user.photoURL,
     );
