@@ -1,13 +1,15 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, ServiceUnavailableException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as admin from "firebase-admin";
 
 @Injectable()
 export class FirebaseAdminService {
   private readonly logger = new Logger(FirebaseAdminService.name);
+  private initialized = false;
 
   constructor(private readonly config: ConfigService) {
     if (admin.apps.length > 0) {
+      this.initialized = true;
       return;
     }
 
@@ -24,6 +26,7 @@ export class FirebaseAdminService {
       admin.initializeApp({
         credential: admin.credential.cert(JSON.parse(serviceAccountJson)),
       });
+      this.initialized = true;
       return;
     }
 
@@ -35,16 +38,22 @@ export class FirebaseAdminService {
           privateKey,
         }),
       });
+      this.initialized = true;
       return;
     }
 
-    this.logger.warn("Firebase Admin uses application default credentials.");
-    admin.initializeApp({
-      credential: admin.credential.applicationDefault(),
-    });
+    this.logger.warn(
+      "Firebase Admin is not configured. Authenticated routes are disabled until Firebase Admin env is provided.",
+    );
   }
 
   verifyIdToken(token: string) {
+    if (!this.initialized) {
+      throw new ServiceUnavailableException(
+        "Firebase Admin belum dikonfigurasi di backend.",
+      );
+    }
+
     return admin.auth().verifyIdToken(token);
   }
 }
