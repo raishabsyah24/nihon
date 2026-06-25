@@ -98,8 +98,72 @@ const _katakana = [
   ('ン', 'n', 'パン'),
 ];
 
+const _hiraganaDakuten = [
+  ('が', 'ga', 'がっこう'),
+  ('ぎ', 'gi', 'ぎんこう'),
+  ('ぐ', 'gu', 'ぐんて'),
+  ('げ', 'ge', 'げんき'),
+  ('ご', 'go', 'ごはん'),
+  ('ざ', 'za', 'ざっし'),
+  ('じ', 'ji', 'じかん'),
+  ('ず', 'zu', 'ずこう'),
+  ('ぜ', 'ze', 'ぜんぶ'),
+  ('ぞ', 'zo', 'ぞう'),
+  ('だ', 'da', 'だいがく'),
+  ('ぢ', 'ji', 'ちぢむ'),
+  ('づ', 'zu', 'つづく'),
+  ('で', 'de', 'でんわ'),
+  ('ど', 'do', 'どうろ'),
+  ('ば', 'ba', 'ばす'),
+  ('び', 'bi', 'びょういん'),
+  ('ぶ', 'bu', 'ぶた'),
+  ('べ', 'be', 'べんきょう'),
+  ('ぼ', 'bo', 'ぼうし'),
+];
+
+const _hiraganaHandakuten = [
+  ('ぱ', 'pa', 'ぱん'),
+  ('ぴ', 'pi', 'ぴあの'),
+  ('ぷ', 'pu', 'ぷりん'),
+  ('ぺ', 'pe', 'ぺん'),
+  ('ぽ', 'po', 'ぽすと'),
+];
+
+const _katakanaDakuten = [
+  ('ガ', 'ga', 'ガイド'),
+  ('ギ', 'gi', 'ギター'),
+  ('グ', 'gu', 'グラス'),
+  ('ゲ', 'ge', 'ゲーム'),
+  ('ゴ', 'go', 'ゴルフ'),
+  ('ザ', 'za', 'ザボン'),
+  ('ジ', 'ji', 'ジーンズ'),
+  ('ズ', 'zu', 'ズボン'),
+  ('ゼ', 'ze', 'ゼリー'),
+  ('ゾ', 'zo', 'ゾーン'),
+  ('ダ', 'da', 'ダンス'),
+  ('ヂ', 'ji', 'ヂ'),
+  ('ヅ', 'zu', 'ヅ'),
+  ('デ', 'de', 'データ'),
+  ('ド', 'do', 'ドア'),
+  ('バ', 'ba', 'バス'),
+  ('ビ', 'bi', 'ビル'),
+  ('ブ', 'bu', 'ブラシ'),
+  ('ベ', 'be', 'ベッド'),
+  ('ボ', 'bo', 'ボール'),
+];
+
+const _katakanaHandakuten = [
+  ('パ', 'pa', 'パン'),
+  ('ピ', 'pi', 'ピアノ'),
+  ('プ', 'pu', 'プール'),
+  ('ペ', 'pe', 'ペン'),
+  ('ポ', 'po', 'ポスト'),
+];
+
 List<KanaCharacter> localKana(String type) {
-  final source = type == 'HIRAGANA' ? _hiragana : _katakana;
+  final source = type == 'HIRAGANA'
+      ? [..._hiragana, ..._hiraganaDakuten, ..._hiraganaHandakuten]
+      : [..._katakana, ..._katakanaDakuten, ..._katakanaHandakuten];
   return [
     for (final row in source)
       KanaCharacter(

@@ -23,29 +23,37 @@ Aplikasi mobile Flutter untuk pengguna Nihon e Ikitai.
 
 ```bash
 flutter pub get
-flutter run --dart-define=API_BASE_URL=http://192.168.0.101:4000
+flutter run
 ```
 
-Untuk device fisik, gunakan IP lokal komputer yang menjalankan backend. IP komputer saat ini adalah `192.168.0.101`.
+Default app mengarah ke backend production:
 
-Untuk emulator Android, gunakan:
+```txt
+https://nihon-phi.vercel.app
+```
+
+Jika ingin override API saat development lokal, gunakan:
 
 ```bash
 flutter run --dart-define=API_BASE_URL=http://10.0.2.2:4000
 ```
 
-Jika IP Wi-Fi komputer berubah, ganti nilai `API_BASE_URL` saat menjalankan Flutter atau update default di `lib/src/config/app_config.dart`.
-
-Untuk login Google di Android, tambahkan Web client ID Firebase:
+Untuk device fisik yang mengarah ke backend lokal, gunakan IP komputer:
 
 ```bash
-flutter run --dart-define=API_BASE_URL=http://192.168.0.101:4000 --dart-define=GOOGLE_SERVER_CLIENT_ID=WEB_CLIENT_ID_FIREBASE
+flutter run --dart-define=API_BASE_URL=http://192.168.0.101:4000
 ```
 
-Saat build APK release:
+Google Sign-In memakai Web client ID Firebase dari `lib/src/config/app_config.dart`. Jika perlu override:
 
 ```bash
-flutter build apk --release --dart-define=API_BASE_URL=https://api-domain-kamu.vercel.app --dart-define=GOOGLE_SERVER_CLIENT_ID=WEB_CLIENT_ID_FIREBASE
+flutter run --dart-define=GOOGLE_SERVER_CLIENT_ID=WEB_CLIENT_ID_FIREBASE
+```
+
+Saat build APK release production:
+
+```bash
+flutter build apk --release
 ```
 
 ## Firebase

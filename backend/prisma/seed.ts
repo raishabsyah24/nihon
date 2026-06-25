@@ -112,6 +112,68 @@ async function main() {
     ["ン", "n", "パン"],
   ] as const;
 
+  const hiraganaDakutenRows = [
+    ["が", "ga", "がっこう"],
+    ["ぎ", "gi", "ぎんこう"],
+    ["ぐ", "gu", "ぐんて"],
+    ["げ", "ge", "げんき"],
+    ["ご", "go", "ごはん"],
+    ["ざ", "za", "ざっし"],
+    ["じ", "ji", "じかん"],
+    ["ず", "zu", "ずこう"],
+    ["ぜ", "ze", "ぜんぶ"],
+    ["ぞ", "zo", "ぞう"],
+    ["だ", "da", "だいがく"],
+    ["ぢ", "ji", "ちぢむ"],
+    ["づ", "zu", "つづく"],
+    ["で", "de", "でんわ"],
+    ["ど", "do", "どうろ"],
+    ["ば", "ba", "ばす"],
+    ["び", "bi", "びょういん"],
+    ["ぶ", "bu", "ぶた"],
+    ["べ", "be", "べんきょう"],
+    ["ぼ", "bo", "ぼうし"],
+  ] as const;
+
+  const hiraganaHandakutenRows = [
+    ["ぱ", "pa", "ぱん"],
+    ["ぴ", "pi", "ぴあの"],
+    ["ぷ", "pu", "ぷりん"],
+    ["ぺ", "pe", "ぺん"],
+    ["ぽ", "po", "ぽすと"],
+  ] as const;
+
+  const katakanaDakutenRows = [
+    ["ガ", "ga", "ガイド"],
+    ["ギ", "gi", "ギター"],
+    ["グ", "gu", "グラス"],
+    ["ゲ", "ge", "ゲーム"],
+    ["ゴ", "go", "ゴルフ"],
+    ["ザ", "za", "ザボン"],
+    ["ジ", "ji", "ジーンズ"],
+    ["ズ", "zu", "ズボン"],
+    ["ゼ", "ze", "ゼリー"],
+    ["ゾ", "zo", "ゾーン"],
+    ["ダ", "da", "ダンス"],
+    ["ヂ", "ji", "ヂ"],
+    ["ヅ", "zu", "ヅ"],
+    ["デ", "de", "データ"],
+    ["ド", "do", "ドア"],
+    ["バ", "ba", "バス"],
+    ["ビ", "bi", "ビル"],
+    ["ブ", "bu", "ブラシ"],
+    ["ベ", "be", "ベッド"],
+    ["ボ", "bo", "ボール"],
+  ] as const;
+
+  const katakanaHandakutenRows = [
+    ["パ", "pa", "パン"],
+    ["ピ", "pi", "ピアノ"],
+    ["プ", "pu", "プール"],
+    ["ペ", "pe", "ペン"],
+    ["ポ", "po", "ポスト"],
+  ] as const;
+
   const kanaRows = [
     ...hiraganaRows.map(([character, romaji, example]) => ({
       type: "HIRAGANA" as const,
@@ -119,7 +181,31 @@ async function main() {
       romaji,
       example,
     })),
+    ...hiraganaDakutenRows.map(([character, romaji, example]) => ({
+      type: "HIRAGANA" as const,
+      character,
+      romaji,
+      example,
+    })),
+    ...hiraganaHandakutenRows.map(([character, romaji, example]) => ({
+      type: "HIRAGANA" as const,
+      character,
+      romaji,
+      example,
+    })),
     ...katakanaRows.map(([character, romaji, example]) => ({
+      type: "KATAKANA" as const,
+      character,
+      romaji,
+      example,
+    })),
+    ...katakanaDakutenRows.map(([character, romaji, example]) => ({
+      type: "KATAKANA" as const,
+      character,
+      romaji,
+      example,
+    })),
+    ...katakanaHandakutenRows.map(([character, romaji, example]) => ({
       type: "KATAKANA" as const,
       character,
       romaji,

@@ -27,50 +27,27 @@ class KanaListScreen extends StatelessWidget {
           fallback: localKana(type),
           isEmpty: (items) => items.isEmpty,
           builder: (context, items) {
-            return GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 0.9,
-              ),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final kana = items[index];
-                return Card(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => KanaDetailScreen(kana: kana),
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            kana.character,
-                            style: Theme.of(context).textTheme.displaySmall
-                                ?.copyWith(fontWeight: FontWeight.w700),
+            final sections = _kanaSections(type, items);
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+              children: [
+                for (final section in sections)
+                  if (section.hasItems) ...[
+                    _KanaSectionTitle(title: section.title),
+                    const SizedBox(height: 8),
+                    _KanaSectionGrid(
+                      rows: section.rows,
+                      onOpen: (kana) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => KanaDetailScreen(kana: kana),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            kana.romaji,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  ),
-                );
-              },
+                    const SizedBox(height: 18),
+                  ],
+              ],
             );
           },
         ),
@@ -78,6 +55,264 @@ class KanaListScreen extends StatelessWidget {
     );
   }
 }
+
+class _KanaSectionTitle extends StatelessWidget {
+  const _KanaSectionTitle({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: Theme.of(
+        context,
+      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+    );
+  }
+}
+
+class _KanaSectionGrid extends StatelessWidget {
+  const _KanaSectionGrid({required this.rows, required this.onOpen});
+
+  final List<List<KanaCharacter?>> rows;
+  final ValueChanged<KanaCharacter> onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final cells = rows.expand((row) => row).toList(growable: false);
+
+    return Column(
+      children: [
+        Row(
+          children: const [
+            _VowelHeader(label: 'A'),
+            _VowelHeader(label: 'I'),
+            _VowelHeader(label: 'U'),
+            _VowelHeader(label: 'E'),
+            _VowelHeader(label: 'O'),
+          ],
+        ),
+        const SizedBox(height: 6),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            childAspectRatio: 0.78,
+          ),
+          itemCount: cells.length,
+          itemBuilder: (context, index) {
+            final kana = cells[index];
+            if (kana == null) {
+              return const SizedBox.shrink();
+            }
+            return _KanaCard(kana: kana, onTap: () => onOpen(kana));
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _VowelHeader extends StatelessWidget {
+  const _VowelHeader({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+    );
+  }
+}
+
+class _KanaCard extends StatelessWidget {
+  const _KanaCard({required this.kana, required this.onTap});
+
+  final KanaCharacter kana;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                kana.character,
+                maxLines: 1,
+                overflow: TextOverflow.visible,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                kana.romaji,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _KanaSection {
+  const _KanaSection({required this.title, required this.rows});
+
+  final String title;
+  final List<List<KanaCharacter?>> rows;
+
+  bool get hasItems => rows.any((row) => row.any((kana) => kana != null));
+}
+
+List<_KanaSection> _kanaSections(String type, List<KanaCharacter> items) {
+  final byCharacter = {for (final item in items) item.character: item};
+  final placed = <String>{};
+  final layouts = type == 'HIRAGANA' ? _hiraganaLayouts : _katakanaLayouts;
+
+  _KanaSection buildSection(String title, List<List<String?>> layout) {
+    final rows = [
+      for (final row in layout)
+        [
+          for (final character in row)
+            if (character == null)
+              null
+            else
+              _takeKana(byCharacter, placed, character),
+        ],
+    ];
+    return _KanaSection(title: title, rows: rows);
+  }
+
+  final sections = [
+    buildSection('Dasar', layouts.basic),
+    buildSection('Tenten', layouts.dakuten),
+    buildSection('Maru', layouts.handakuten),
+  ];
+
+  final remaining = items
+      .where((item) => !placed.contains(item.character))
+      .toList()
+    ..sort((a, b) => a.romaji.compareTo(b.romaji));
+  if (remaining.isNotEmpty) {
+    sections.add(
+      _KanaSection(title: 'Lainnya', rows: _chunkRemaining(remaining)),
+    );
+  }
+
+  return sections;
+}
+
+KanaCharacter? _takeKana(
+  Map<String, KanaCharacter> byCharacter,
+  Set<String> placed,
+  String character,
+) {
+  final kana = byCharacter[character];
+  if (kana != null) {
+    placed.add(kana.character);
+  }
+  return kana;
+}
+
+List<List<KanaCharacter?>> _chunkRemaining(List<KanaCharacter> items) {
+  final rows = <List<KanaCharacter?>>[];
+  for (var index = 0; index < items.length; index += 5) {
+    final row = <KanaCharacter?>[
+      ...items.skip(index).take(5),
+    ];
+    while (row.length < 5) {
+      row.add(null);
+    }
+    rows.add(row);
+  }
+  return rows;
+}
+
+const _hiraganaLayouts = (
+  basic: _hiraganaBasicRows,
+  dakuten: _hiraganaDakutenRows,
+  handakuten: _hiraganaHandakutenRows,
+);
+
+const _katakanaLayouts = (
+  basic: _katakanaBasicRows,
+  dakuten: _katakanaDakutenRows,
+  handakuten: _katakanaHandakutenRows,
+);
+
+const List<List<String?>> _hiraganaBasicRows = [
+  ['あ', 'い', 'う', 'え', 'お'],
+  ['か', 'き', 'く', 'け', 'こ'],
+  ['さ', 'し', 'す', 'せ', 'そ'],
+  ['た', 'ち', 'つ', 'て', 'と'],
+  ['な', 'に', 'ぬ', 'ね', 'の'],
+  ['は', 'ひ', 'ふ', 'へ', 'ほ'],
+  ['ま', 'み', 'む', 'め', 'も'],
+  ['や', null, 'ゆ', null, 'よ'],
+  ['ら', 'り', 'る', 'れ', 'ろ'],
+  ['わ', null, null, null, 'を'],
+  ['ん', null, null, null, null],
+];
+
+const List<List<String?>> _hiraganaDakutenRows = [
+  ['が', 'ぎ', 'ぐ', 'げ', 'ご'],
+  ['ざ', 'じ', 'ず', 'ぜ', 'ぞ'],
+  ['だ', 'ぢ', 'づ', 'で', 'ど'],
+  ['ば', 'び', 'ぶ', 'べ', 'ぼ'],
+];
+
+const List<List<String?>> _hiraganaHandakutenRows = [
+  ['ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ'],
+];
+
+const List<List<String?>> _katakanaBasicRows = [
+  ['ア', 'イ', 'ウ', 'エ', 'オ'],
+  ['カ', 'キ', 'ク', 'ケ', 'コ'],
+  ['サ', 'シ', 'ス', 'セ', 'ソ'],
+  ['タ', 'チ', 'ツ', 'テ', 'ト'],
+  ['ナ', 'ニ', 'ヌ', 'ネ', 'ノ'],
+  ['ハ', 'ヒ', 'フ', 'ヘ', 'ホ'],
+  ['マ', 'ミ', 'ム', 'メ', 'モ'],
+  ['ヤ', null, 'ユ', null, 'ヨ'],
+  ['ラ', 'リ', 'ル', 'レ', 'ロ'],
+  ['ワ', null, null, null, 'ヲ'],
+  ['ン', null, null, null, null],
+];
+
+const List<List<String?>> _katakanaDakutenRows = [
+  ['ガ', 'ギ', 'グ', 'ゲ', 'ゴ'],
+  ['ザ', 'ジ', 'ズ', 'ゼ', 'ゾ'],
+  ['ダ', 'ヂ', 'ヅ', 'デ', 'ド'],
+  ['バ', 'ビ', 'ブ', 'ベ', 'ボ'],
+];
+
+const List<List<String?>> _katakanaHandakutenRows = [
+  ['パ', 'ピ', 'プ', 'ペ', 'ポ'],
+];
 
 class KanaDetailScreen extends StatefulWidget {
   const KanaDetailScreen({super.key, required this.kana});
