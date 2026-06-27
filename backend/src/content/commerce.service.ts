@@ -76,6 +76,8 @@ type VoucherWriteData = PromoWriteData & {
   perUserLimit?: number;
 };
 
+type OrderWithItems = Prisma.OrderGetPayload<{ include: { items: true } }>;
+
 @Injectable()
 export class CommerceService {
   constructor(private readonly prisma: PrismaService) {}
@@ -492,6 +494,7 @@ export class CommerceService {
     );
     const total = Math.max(0, totalBeforePoints - pointDiscount);
     const orderNumber = createOrderNumber();
+    const metadata = buildDevelopmentPaymentMetadata(orderNumber, total, "IDR");
 
     return this.prisma.order.create({
       data: {
@@ -506,6 +509,7 @@ export class CommerceService {
         promo: promo ? { connect: { id: promo.id } } : undefined,
         voucher: voucher ? { connect: { id: voucher.id } } : undefined,
         pointsUsed: pointDiscount,
+        metadata,
         items: {
           create: packages.map((item) => ({
             package: { connect: { id: item.id } },
@@ -548,6 +552,32 @@ export class CommerceService {
     }
 
     return item;
+  }
+
+  async settleMyDevPayment(user: RequestUser, id: string) {
+    return this.prisma.$transaction(async (tx) => {
+      const order = await tx.order.findFirst({
+        where: { id, userId: user.id },
+        include: { items: true },
+      });
+
+      if (!order) {
+        throw new NotFoundException("Order not found.");
+      }
+
+      if (order.status === OrderStatus.CANCELLED) {
+        throw new BadRequestException("Cancelled order cannot be paid.");
+      }
+
+      if (order.status === OrderStatus.PAID) {
+        return tx.order.findUnique({
+          where: { id },
+          include: orderInclude,
+        });
+      }
+
+      return this.markOrderPaid(tx, order, "XENDIT_DEV");
+    });
   }
 
   listAdminOrders(query: Record<string, unknown>) {
@@ -596,11 +626,16 @@ export class CommerceService {
           throw new BadRequestException("Paid order cannot be cancelled.");
         }
 
+        const now = new Date();
         return tx.order.update({
           where: { id },
           data: {
             status: OrderStatus.CANCELLED,
-            cancelledAt: new Date(),
+            cancelledAt: now,
+            metadata: mergePaymentMetadata(order.metadata, {
+              paymentStatus: "CANCELLED",
+              cancelledAt: now.toISOString(),
+            }),
           },
           include: orderInclude,
         });
@@ -610,71 +645,7 @@ export class CommerceService {
         throw new BadRequestException("Only PAID or CANCELLED is allowed.");
       }
 
-      const now = new Date();
-      const pointsEarned = Math.floor(order.total / 10);
-      await tx.order.update({
-        where: { id },
-        data: {
-          status: OrderStatus.PAID,
-          paidAt: now,
-          pointsEarned,
-        },
-      });
-
-      for (const item of order.items) {
-        const entitlement = await tx.userEntitlement.findUnique({
-          where: {
-            userId_packageId: {
-              userId: order.userId,
-              packageId: item.packageId,
-            },
-          },
-        });
-
-        if (entitlement) {
-          await tx.userEntitlement.update({
-            where: { id: entitlement.id },
-            data: {
-              source: EntitlementSource.PURCHASE,
-              sourceOrderId: order.id,
-              startsAt: now,
-              expiresAt: null,
-              revokedAt: null,
-            },
-          });
-        } else {
-          await tx.userEntitlement.create({
-            data: {
-              userId: order.userId,
-              packageId: item.packageId,
-              source: EntitlementSource.PURCHASE,
-              sourceOrderId: order.id,
-              startsAt: now,
-            },
-          });
-        }
-      }
-
-      await this.applyPaidOrderLoyalty(tx, order, pointsEarned);
-
-      if (order.promoId) {
-        await tx.promo.update({
-          where: { id: order.promoId },
-          data: { usedCount: { increment: 1 } },
-        });
-      }
-
-      if (order.voucherId) {
-        await tx.voucher.update({
-          where: { id: order.voucherId },
-          data: { usedCount: { increment: 1 } },
-        });
-      }
-
-      return tx.order.findUnique({
-        where: { id },
-        include: orderInclude,
-      });
+      return this.markOrderPaid(tx, order, "ADMIN_MANUAL");
     });
   }
 
@@ -1323,6 +1294,84 @@ export class CommerceService {
     }
   }
 
+  private async markOrderPaid(
+    tx: Prisma.TransactionClient,
+    order: OrderWithItems,
+    paymentSource: string,
+  ) {
+    const now = new Date();
+    const pointsEarned = Math.floor(order.total / 10);
+
+    await tx.order.update({
+      where: { id: order.id },
+      data: {
+        status: OrderStatus.PAID,
+        paidAt: now,
+        pointsEarned,
+        metadata: mergePaymentMetadata(order.metadata, {
+          paymentStatus: "PAID",
+          paymentSource,
+          paidAt: now.toISOString(),
+        }),
+      },
+    });
+
+    for (const item of order.items) {
+      const entitlement = await tx.userEntitlement.findUnique({
+        where: {
+          userId_packageId: {
+            userId: order.userId,
+            packageId: item.packageId,
+          },
+        },
+      });
+
+      if (entitlement) {
+        await tx.userEntitlement.update({
+          where: { id: entitlement.id },
+          data: {
+            source: EntitlementSource.PURCHASE,
+            sourceOrderId: order.id,
+            startsAt: now,
+            expiresAt: null,
+            revokedAt: null,
+          },
+        });
+      } else {
+        await tx.userEntitlement.create({
+          data: {
+            userId: order.userId,
+            packageId: item.packageId,
+            source: EntitlementSource.PURCHASE,
+            sourceOrderId: order.id,
+            startsAt: now,
+          },
+        });
+      }
+    }
+
+    await this.applyPaidOrderLoyalty(tx, order, pointsEarned);
+
+    if (order.promoId) {
+      await tx.promo.update({
+        where: { id: order.promoId },
+        data: { usedCount: { increment: 1 } },
+      });
+    }
+
+    if (order.voucherId) {
+      await tx.voucher.update({
+        where: { id: order.voucherId },
+        data: { usedCount: { increment: 1 } },
+      });
+    }
+
+    return tx.order.findUnique({
+      where: { id: order.id },
+      include: orderInclude,
+    });
+  }
+
   private buildMenuPreview(
     key: string,
     title: string,
@@ -1468,6 +1517,35 @@ function isActiveNow(item: { startsAt: Date | null; endsAt: Date | null }) {
 function createOrderNumber() {
   const random = Math.random().toString(36).slice(2, 8).toUpperCase();
   return `NEI-${Date.now()}-${random}`;
+}
+
+function buildDevelopmentPaymentMetadata(
+  orderNumber: string,
+  amount: number,
+  currency: string,
+): Prisma.InputJsonObject {
+  return {
+    paymentProvider: "XENDIT",
+    paymentMode: "SANDBOX",
+    paymentStatus: "PENDING",
+    paymentReference: orderNumber,
+    paymentExternalId: orderNumber,
+    paymentAmount: amount,
+    paymentCurrency: currency,
+    paymentCheckoutUrl: `https://checkout-staging.xendit.co/web/${orderNumber}`,
+    paymentDescription:
+      "Development payment. Hubungkan XENDIT_SECRET_KEY untuk invoice Xendit asli.",
+  };
+}
+
+function mergePaymentMetadata(
+  value: unknown,
+  updates: Prisma.InputJsonObject,
+): Prisma.InputJsonObject {
+  return {
+    ...toMutableMetadata(value),
+    ...updates,
+  } as Prisma.InputJsonObject;
 }
 
 function normalizeSlug(value: unknown) {

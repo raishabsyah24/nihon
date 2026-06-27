@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../models/app_models.dart';
 import '../../services/api_client.dart';
 import '../common/async_content.dart';
+import '../payments/payment_screens.dart';
 import '../questions/question_screens.dart';
 
 class PackageListScreen extends StatelessWidget {
@@ -169,7 +170,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
                   FilledButton.icon(
                     onPressed: _ordering ? null : () => _createOrder(item),
                     icon: const Icon(Icons.shopping_bag_outlined),
-                    label: Text(_ordering ? 'Membuat Order...' : 'Buat Order'),
+                    label: Text(_ordering ? 'Membuat Order...' : 'Beli Paket'),
                   ),
               ],
             );
@@ -198,19 +199,22 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
       if (!mounted) {
         return;
       }
-      await showDialog<void>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Order dibuat'),
-          content: Text(_orderCreatedMessage(order)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
+      final paidOrder = await Navigator.of(context).push<OrderSummary>(
+        MaterialPageRoute(
+          builder: (_) => DevPaymentScreen(
+            apiClient: widget.apiClient,
+            order: order,
+          ),
         ),
       );
+      if (!mounted) {
+        return;
+      }
+      if (paidOrder?.isPaid == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Paket sudah aktif.')),
+        );
+      }
       setState(() {
         _future = widget.apiClient.getMyPackage(item.slug);
       });
@@ -372,24 +376,6 @@ String _contentTypeLabel(String contentType) {
   };
 }
 
-String _orderCreatedMessage(OrderSummary order) {
-  final lines = [
-    'Nomor order: ${order.orderNumber}',
-    'Subtotal: ${formatCurrency(order.subtotal, order.currency)}',
-    if (order.promoDiscount > 0)
-      'Promo: -${formatCurrency(order.promoDiscount, order.currency)}',
-    if (order.voucherDiscount > 0)
-      'Voucher: -${formatCurrency(order.voucherDiscount, order.currency)}',
-    if (order.pointDiscount > 0)
-      'Point: -${formatCurrency(order.pointDiscount, order.currency)}',
-    'Total: ${formatCurrency(order.total, order.currency)}',
-    '',
-    'Status masih PENDING. Admin perlu verifikasi pembayaran agar paket terbuka.',
-  ];
-
-  return lines.join('\n');
-}
-
 class _CheckoutInput {
   const _CheckoutInput({required this.voucherCode, required this.pointsToUse});
 
@@ -418,7 +404,7 @@ class _CheckoutDialogState extends State<_CheckoutDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Buat Order'),
+      title: const Text('Checkout'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -467,7 +453,7 @@ class _CheckoutDialogState extends State<_CheckoutDialog> {
               ),
             );
           },
-          child: const Text('Lanjut'),
+          child: const Text('Lanjut Pembayaran'),
         ),
       ],
     );

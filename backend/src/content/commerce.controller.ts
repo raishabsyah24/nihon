@@ -121,6 +121,15 @@ export class CommerceController {
     return this.commerce.getMyOrder(user, id);
   }
 
+  @Post("me/orders/:id/payments/dev/settle")
+  @UseGuards(FirebaseAuthGuard)
+  settleMyDevPayment(
+    @CurrentUser() user: RequestUser,
+    @Param("id") id: string,
+  ) {
+    return this.commerce.settleMyDevPayment(user, id);
+  }
+
   @Get("admin/packages")
   @AdminRoute()
   getAdminPackages(@Query() query: Record<string, unknown>) {

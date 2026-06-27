@@ -1448,7 +1448,7 @@ String _orderStatusMessage(String status) {
 String _orderAccessMessage(String status) {
   return switch (status) {
     'PENDING' =>
-      'Paket belum terbuka. Tunggu admin mengubah status order menjadi PAID setelah pembayaran diterima.',
+      'Paket belum terbuka. Lanjutkan pembayaran dari halaman paket atau tunggu admin memverifikasi pembayaran.',
     'PAID' =>
       'Paket sudah terbuka. Buka tab Belajar untuk materi, atau tab Ujian untuk latihan soal.',
     'CANCELLED' =>

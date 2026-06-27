@@ -232,6 +232,11 @@ class ApiClient {
     return OrderSummary.fromJson(data);
   }
 
+  Future<OrderSummary> settleDevPayment(String id) async {
+    final data = await _postMap('/me/orders/$id/payments/dev/settle', {});
+    return OrderSummary.fromJson(data);
+  }
+
   Future<List<dynamic>> _getList(
     String path, {
     Map<String, String?> query = const {},

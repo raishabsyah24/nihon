@@ -35,6 +35,16 @@ List<JsonMap> jsonMapList(dynamic value) {
   return const [];
 }
 
+JsonMap jsonObject(dynamic value) {
+  if (value is JsonMap) {
+    return value;
+  }
+  if (value is Map) {
+    return value.map((key, item) => MapEntry(key.toString(), item));
+  }
+  return <String, dynamic>{};
+}
+
 class AppUser {
   const AppUser({
     required this.id,
@@ -592,6 +602,7 @@ class OrderSummary {
     required this.pointsUsed,
     required this.pointsEarned,
     required this.items,
+    required this.metadata,
     this.createdAt,
   });
 
@@ -607,7 +618,16 @@ class OrderSummary {
   final int pointsUsed;
   final int pointsEarned;
   final List<OrderItemSummary> items;
+  final JsonMap metadata;
   final DateTime? createdAt;
+
+  bool get isPaid => status == 'PAID';
+  bool get isPending => status == 'PENDING';
+  String? get paymentProvider => jsonString(metadata['paymentProvider']);
+  String? get paymentMode => jsonString(metadata['paymentMode']);
+  String? get paymentStatus => jsonString(metadata['paymentStatus']);
+  String? get paymentExternalId => jsonString(metadata['paymentExternalId']);
+  String? get paymentCheckoutUrl => jsonString(metadata['paymentCheckoutUrl']);
 
   factory OrderSummary.fromJson(JsonMap json) {
     return OrderSummary(
@@ -623,6 +643,7 @@ class OrderSummary {
       pointsUsed: jsonInt(json['pointsUsed']),
       pointsEarned: jsonInt(json['pointsEarned']),
       items: jsonMapList(json['items']).map(OrderItemSummary.fromJson).toList(),
+      metadata: jsonObject(json['metadata']),
       createdAt: jsonDate(json['createdAt']),
     );
   }
