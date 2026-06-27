@@ -7,8 +7,12 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { QuestionType } from "@prisma/client";
+import { CurrentUser } from "../auth/current-user.decorator";
+import { FirebaseAuthGuard } from "../auth/firebase-auth.guard";
+import { RequestUser } from "../auth/request-user.type";
 import { ContentService } from "./content.service";
 import { AdminRoute } from "./admin-route";
 
@@ -31,6 +35,15 @@ export class QuestionsController {
     return this.content.getQuestionSet(id, QuestionType.JLPT);
   }
 
+  @Get("me/jlpt/question-sets/:id")
+  @UseGuards(FirebaseAuthGuard)
+  getMyJlptQuestionSet(
+    @Param("id") id: string,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.content.getQuestionSet(id, QuestionType.JLPT, user.id);
+  }
+
   @Get("jft/questions")
   getJft(@Query("category") category?: string) {
     return this.content.getJft(category);
@@ -44,6 +57,15 @@ export class QuestionsController {
   @Get("jft/question-sets/:id")
   getJftQuestionSet(@Param("id") id: string) {
     return this.content.getQuestionSet(id, QuestionType.JFT);
+  }
+
+  @Get("me/jft/question-sets/:id")
+  @UseGuards(FirebaseAuthGuard)
+  getMyJftQuestionSet(
+    @Param("id") id: string,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.content.getQuestionSet(id, QuestionType.JFT, user.id);
   }
 
   @Get("admin/jlpt/question-sets")

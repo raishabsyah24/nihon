@@ -319,11 +319,69 @@ async function main() {
     },
   });
 
+  const [jlptN3Set, jlptN2Set, jlptN1Set] = await Promise.all(
+    [
+      {
+        id: "seed-set-jlpt-n3-reading-basic",
+        slug: "jlpt-n3-reading-basic",
+        title: "JLPT N3 Reading Basic",
+        description: "Paket latihan bacaan dan tata bahasa transisi JLPT N3.",
+        level: "N3",
+        category: "dokkai",
+        durationMinutes: 25,
+      },
+      {
+        id: "seed-set-jlpt-n2-formal-expression",
+        slug: "jlpt-n2-formal-expression",
+        title: "JLPT N2 Formal Expression",
+        description:
+          "Paket latihan ungkapan formal, kosakata abstrak, dan bacaan JLPT N2.",
+        level: "N2",
+        category: "bunpou",
+        durationMinutes: 30,
+      },
+      {
+        id: "seed-set-jlpt-n1-advanced-reading",
+        slug: "jlpt-n1-advanced-reading",
+        title: "JLPT N1 Advanced Reading",
+        description:
+          "Paket latihan pemahaman teks kompleks dan ungkapan mahir JLPT N1.",
+        level: "N1",
+        category: "dokkai",
+        durationMinutes: 35,
+      },
+    ].map((set) =>
+      prisma.questionSet.upsert({
+        where: { slug: set.slug },
+        update: {
+          title: set.title,
+          description: set.description,
+          level: set.level,
+          category: set.category,
+          durationMinutes: set.durationMinutes,
+          status: "PUBLISHED",
+        },
+        create: {
+          id: set.id,
+          type: "JLPT",
+          title: set.title,
+          slug: set.slug,
+          description: set.description,
+          level: set.level,
+          category: set.category,
+          durationMinutes: set.durationMinutes,
+          status: "PUBLISHED",
+        },
+      }),
+    ),
+  );
+
   const jftSet = await prisma.questionSet.upsert({
     where: { slug: "jft-basic-daily-expression" },
     update: {
-      title: "JFT Basic Daily Expression",
-      description: "Paket latihan ungkapan harian JFT Basic.",
+      title: "JFT Basic A1 Daily Expression",
+      description: "Paket latihan ungkapan harian JFT Basic A1.",
+      level: "A1",
       category: "daily",
       durationMinutes: 15,
       status: "PUBLISHED",
@@ -331,14 +389,73 @@ async function main() {
     create: {
       id: "seed-set-jft-daily",
       type: "JFT",
-      title: "JFT Basic Daily Expression",
+      title: "JFT Basic A1 Daily Expression",
       slug: "jft-basic-daily-expression",
-      description: "Paket latihan ungkapan harian JFT Basic.",
+      description: "Paket latihan ungkapan harian JFT Basic A1.",
+      level: "A1",
       category: "daily",
       durationMinutes: 15,
       status: "PUBLISHED",
     },
   });
+
+  const [jftA2Set, jftB1Set, jftB2Set] = await Promise.all(
+    [
+      {
+        id: "seed-set-jft-a2-public-life",
+        slug: "jft-basic-a2-public-life",
+        title: "JFT Basic A2 Public Life",
+        description:
+          "Paket latihan JFT A2 untuk jadwal, lokasi, belanja, dan layanan umum.",
+        level: "A2",
+        category: "life",
+        durationMinutes: 18,
+      },
+      {
+        id: "seed-set-jft-b1-work-instruction",
+        slug: "jft-basic-b1-work-instruction",
+        title: "JFT Basic B1 Work Instruction",
+        description:
+          "Paket latihan JFT B1 untuk instruksi kerja dan percakapan tempat kerja.",
+        level: "B1",
+        category: "work",
+        durationMinutes: 20,
+      },
+      {
+        id: "seed-set-jft-b2-reading-context",
+        slug: "jft-basic-b2-reading-context",
+        title: "JFT Basic B2 Reading Context",
+        description:
+          "Paket latihan JFT B2 untuk bacaan lebih panjang dan pemahaman konteks.",
+        level: "B2",
+        category: "reading",
+        durationMinutes: 22,
+      },
+    ].map((set) =>
+      prisma.questionSet.upsert({
+        where: { slug: set.slug },
+        update: {
+          title: set.title,
+          description: set.description,
+          level: set.level,
+          category: set.category,
+          durationMinutes: set.durationMinutes,
+          status: "PUBLISHED",
+        },
+        create: {
+          id: set.id,
+          type: "JFT",
+          title: set.title,
+          slug: set.slug,
+          description: set.description,
+          level: set.level,
+          category: set.category,
+          durationMinutes: set.durationMinutes,
+          status: "PUBLISHED",
+        },
+      }),
+    ),
+  );
 
   const questionRows = [
     {
@@ -381,8 +498,106 @@ async function main() {
       status: "PUBLISHED" as const,
     },
     {
+      id: "seed-question-jlpt-n3-koto",
+      type: "JLPT" as const,
+      level: "N3",
+      category: "bunpou",
+      questionSetId: jlptN3Set.id,
+      prompt: "「日本へ行くことにしました。」の意味に近いものはどれですか。",
+      options: [
+        "Saya memutuskan pergi ke Jepang.",
+        "Saya sedang pergi ke Jepang.",
+        "Saya pernah pergi ke Jepang.",
+        "Saya dilarang pergi ke Jepang.",
+      ],
+      answerIndex: 0,
+      explanation:
+        "ことにしました digunakan saat pembicara sudah mengambil keputusan.",
+      sortOrder: 1,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jlpt-n3-reading-notice",
+      type: "JLPT" as const,
+      level: "N3",
+      category: "dokkai",
+      questionSetId: jlptN3Set.id,
+      prompt:
+        "「会議は午後三時から四時までです。五分前に会議室へ来てください。」何時に会議室へ行きますか。",
+      options: ["2時55分", "3時05分", "4時00分", "4時05分"],
+      answerIndex: 0,
+      explanation:
+        "五分前 berarti 5 menit sebelum mulai. Mulai 3:00, jadi datang 2:55.",
+      sortOrder: 2,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jlpt-n2-ni-tsurete",
+      type: "JLPT" as const,
+      level: "N2",
+      category: "bunpou",
+      questionSetId: jlptN2Set.id,
+      prompt: "日本語が上手になる（　）、仕事のチャンスも増えます。",
+      options: ["につれて", "に対して", "によって", "として"],
+      answerIndex: 0,
+      explanation:
+        "につれて menyatakan perubahan yang terjadi seiring perubahan lain.",
+      sortOrder: 1,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jlpt-n2-formal-mail",
+      type: "JLPT" as const,
+      level: "N2",
+      category: "kotoba",
+      questionSetId: jlptN2Set.id,
+      prompt:
+        "Email formal: 「資料を（　）いただけますでしょうか。」Kata yang paling sopan adalah?",
+      options: ["送って", "送付して", "投げて", "出して"],
+      answerIndex: 1,
+      explanation:
+        "送付して lebih formal untuk konteks bisnis dibanding 送って.",
+      sortOrder: 2,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jlpt-n1-yue-ni",
+      type: "JLPT" as const,
+      level: "N1",
+      category: "bunpou",
+      questionSetId: jlptN1Set.id,
+      prompt: "努力した（　）、合格の喜びは大きかった。",
+      options: ["ゆえに", "ものの", "どころか", "にしては"],
+      answerIndex: 0,
+      explanation:
+        "ゆえに berarti karena/oleh sebab itu, cocok untuk alasan formal.",
+      sortOrder: 1,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jlpt-n1-abstract-reading",
+      type: "JLPT" as const,
+      level: "N1",
+      category: "dokkai",
+      questionSetId: jlptN1Set.id,
+      prompt:
+        "「効率を追求するあまり、学ぶ楽しさを見失ってはならない。」Penulis ingin menekankan apa?",
+      options: [
+        "Efisiensi penting, tetapi rasa senang belajar juga harus dijaga.",
+        "Efisiensi tidak diperlukan dalam belajar.",
+        "Belajar harus selalu cepat tanpa istirahat.",
+        "Kesenangan belajar tidak ada hubungannya dengan hasil.",
+      ],
+      answerIndex: 0,
+      explanation:
+        "Kalimat menegaskan jangan kehilangan 楽しさ saat terlalu mengejar efisiensi.",
+      sortOrder: 2,
+      status: "PUBLISHED" as const,
+    },
+    {
       id: "seed-question-jft-arigatou",
       type: "JFT" as const,
+      level: "A1",
       category: "daily",
       questionSetId: jftSet.id,
       prompt: "Pilih ungkapan yang tepat untuk mengucapkan terima kasih.",
@@ -395,12 +610,124 @@ async function main() {
     {
       id: "seed-question-jft-eki",
       type: "JFT" as const,
+      level: "A1",
       category: "daily",
       questionSetId: jftSet.id,
       prompt: "「駅」は tempat untuk apa?",
       options: ["Makan", "Naik kereta", "Belanja baju", "Tidur"],
       answerIndex: 1,
       explanation: "駅 berarti stasiun.",
+      sortOrder: 2,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jft-a2-kippu",
+      type: "JFT" as const,
+      level: "A2",
+      category: "life",
+      questionSetId: jftA2Set.id,
+      prompt: "「切符を買います。」Kegiatan apa yang dilakukan?",
+      options: ["Membeli tiket", "Mencari kamar", "Membaca buku", "Memasak"],
+      answerIndex: 0,
+      explanation: "切符 berarti tiket, 買います berarti membeli.",
+      sortOrder: 1,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jft-a2-schedule",
+      type: "JFT" as const,
+      level: "A2",
+      category: "life",
+      questionSetId: jftA2Set.id,
+      prompt: "「バスは午前八時に出ます。」Informasi yang benar adalah?",
+      options: [
+        "Bus berangkat pukul 08.00 pagi",
+        "Bus tiba pukul 08.00 malam",
+        "Bus libur hari ini",
+        "Bus berhenti selama 8 jam",
+      ],
+      answerIndex: 0,
+      explanation: "午前八時 berarti jam 8 pagi, 出ます berarti berangkat.",
+      sortOrder: 2,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jft-b1-safety",
+      type: "JFT" as const,
+      level: "B1",
+      category: "work",
+      questionSetId: jftB1Set.id,
+      prompt:
+        "Atasan berkata: 「作業の前に、必ず手袋をしてください。」Apa yang harus dilakukan?",
+      options: [
+        "Memakai sarung tangan sebelum bekerja",
+        "Melepas sarung tangan saat bekerja",
+        "Membersihkan ruangan setelah pulang",
+        "Menulis laporan sebelum makan",
+      ],
+      answerIndex: 0,
+      explanation:
+        "作業の前に berarti sebelum bekerja, 手袋をしてください berarti pakai sarung tangan.",
+      sortOrder: 1,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jft-b1-report",
+      type: "JFT" as const,
+      level: "B1",
+      category: "work",
+      questionSetId: jftB1Set.id,
+      prompt:
+        "「問題があったら、すぐ報告してください。」Respons paling tepat adalah?",
+      options: [
+        "はい、すぐ報告します。",
+        "いいえ、休みます。",
+        "昨日買いました。",
+        "とても暑いです。",
+      ],
+      answerIndex: 0,
+      explanation:
+        "Instruksi meminta segera melapor jika ada masalah, jadi respons setuju paling tepat.",
+      sortOrder: 2,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jft-b2-notice",
+      type: "JFT" as const,
+      level: "B2",
+      category: "reading",
+      questionSetId: jftB2Set.id,
+      prompt:
+        "Pemberitahuan: 「明日は点検のため、入口Aは使えません。入口Bをご利用ください。」Apa maksudnya?",
+      options: [
+        "Besok gunakan pintu B karena pintu A tidak bisa dipakai",
+        "Besok pintu B ditutup untuk libur",
+        "Hari ini semua pintu bisa dipakai",
+        "Pemeriksaan dibatalkan karena pintu A rusak",
+      ],
+      answerIndex: 0,
+      explanation:
+        "入口Aは使えません dan 入口Bをご利用ください berarti gunakan pintu B.",
+      sortOrder: 1,
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "seed-question-jft-b2-context",
+      type: "JFT" as const,
+      level: "B2",
+      category: "reading",
+      questionSetId: jftB2Set.id,
+      prompt:
+        "「急ぎではありませんが、今週中に確認していただけると助かります。」Nada kalimat ini adalah?",
+      options: [
+        "Permintaan sopan dengan batas waktu minggu ini",
+        "Larangan keras untuk mengecek dokumen",
+        "Keluhan karena pekerjaan sudah selesai",
+        "Pemberitahuan bahwa tidak perlu dicek",
+      ],
+      answerIndex: 0,
+      explanation:
+        "急ぎではありませんが dan いただけると助かります menunjukkan permintaan sopan.",
       sortOrder: 2,
       status: "PUBLISHED" as const,
     },
@@ -558,6 +885,781 @@ async function main() {
       sswModuleId: module.id,
     },
   });
+
+  const materialRows = [
+    {
+      id: "jft-basic-a1-material",
+      kind: "JFT_MATERIAL" as const,
+      title: "Materi JFT Basic A1",
+      slug: "jft-basic-a1-material",
+      level: "A1",
+      category: "JFT Basic",
+      summary:
+        "Fondasi komunikasi harian: salam, perkenalan, benda sekitar, dan kalimat sederhana.",
+      content:
+        "Level A1 membantu user memahami ungkapan yang sering muncul dalam situasi sangat dekat: menyapa, menyebut nama, bertanya benda, dan memahami instruksi pendek.",
+      sections: [
+        {
+          title: "Target belajar",
+          body: "User mampu memperkenalkan diri, memahami pertanyaan sederhana, dan menjawab dengan pola kalimat pendek.",
+        },
+        {
+          title: "Pola inti",
+          body: "Gunakan pola A wa B desu untuk memperkenalkan orang, benda, asal, pekerjaan, atau status.",
+        },
+      ],
+      vocabulary: [
+        {
+          kanji: "日本",
+          kana: "にほん",
+          furigana: "にほん",
+          romaji: "nihon",
+          meaning: "Jepang",
+        },
+        {
+          kanji: "名前",
+          kana: "なまえ",
+          furigana: "なまえ",
+          romaji: "namae",
+          meaning: "nama",
+        },
+      ],
+      examples: [
+        {
+          japanese: "わたしはインドネシア人です。",
+          furigana: "わたしはインドネシアじんです。",
+          romaji: "watashi wa Indoneshia-jin desu.",
+          meaning: "Saya orang Indonesia.",
+        },
+      ],
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "jft-basic-a2-material",
+      kind: "JFT_MATERIAL" as const,
+      title: "Materi JFT Basic A2",
+      slug: "jft-basic-a2-material",
+      level: "A2",
+      category: "JFT Basic",
+      summary:
+        "Aktivitas harian, kebutuhan sederhana, dan percakapan pendek di tempat umum.",
+      content:
+        "Level A2 menguatkan kemampuan membaca informasi pendek, memahami instruksi umum, dan memilih respons yang sesuai dalam situasi sehari-hari.",
+      sections: [
+        {
+          title: "Target belajar",
+          body: "User mampu memahami jadwal, harga, lokasi, dan percakapan praktis yang memakai kosakata umum.",
+        },
+        {
+          title: "Pola inti",
+          body: "Gunakan kata kerja bentuk masu untuk menyatakan aktivitas harian dan rencana sederhana.",
+        },
+      ],
+      vocabulary: [
+        {
+          kanji: "時間",
+          kana: "じかん",
+          furigana: "じかん",
+          romaji: "jikan",
+          meaning: "waktu",
+        },
+        {
+          kanji: "買います",
+          kana: "かいます",
+          furigana: "かいます",
+          romaji: "kaimasu",
+          meaning: "membeli",
+        },
+      ],
+      examples: [
+        {
+          japanese: "駅で切符を買います。",
+          furigana: "えきできっぷをかいます。",
+          romaji: "eki de kippu o kaimasu.",
+          meaning: "Membeli tiket di stasiun.",
+        },
+      ],
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "jft-basic-b1-material",
+      kind: "JFT_MATERIAL" as const,
+      title: "Materi JFT Basic B1",
+      slug: "jft-basic-b1-material",
+      level: "B1",
+      category: "JFT Basic",
+      summary:
+        "Instruksi kerja, informasi layanan, dan bacaan menengah yang lebih panjang.",
+      content:
+        "Level B1 menyiapkan user memahami informasi kerja yang berisi alasan, urutan tindakan, larangan, dan pilihan respons yang tepat.",
+      sections: [
+        {
+          title: "Target belajar",
+          body: "User mampu memahami instruksi bertahap dan mencari inti informasi dari pengumuman atau pesan pendek.",
+        },
+        {
+          title: "Pola inti",
+          body: "Latih pola te kudasai, te mo ii desu, dan te wa ikemasen untuk instruksi dan aturan.",
+        },
+      ],
+      vocabulary: [
+        {
+          kanji: "説明",
+          kana: "せつめい",
+          furigana: "せつめい",
+          romaji: "setsumei",
+          meaning: "penjelasan",
+        },
+        {
+          kanji: "確認",
+          kana: "かくにん",
+          furigana: "かくにん",
+          romaji: "kakunin",
+          meaning: "konfirmasi",
+        },
+      ],
+      examples: [
+        {
+          japanese: "作業の前に説明を確認してください。",
+          furigana: "さぎょうのまえにせつめいをかくにんしてください。",
+          romaji: "sagyou no mae ni setsumei o kakunin shite kudasai.",
+          meaning: "Sebelum bekerja, pastikan penjelasannya.",
+        },
+      ],
+      status: "PUBLISHED" as const,
+    },
+    {
+      id: "jft-basic-b2-material",
+      kind: "JFT_MATERIAL" as const,
+      title: "Materi JFT Basic B2",
+      slug: "jft-basic-b2-material",
+      level: "B2",
+      category: "JFT Basic",
+      summary:
+        "Pemahaman situasi panjang, alasan, opini sederhana, dan konteks tempat kerja.",
+      content:
+        "Level B2 memperkuat kemampuan memilih kesimpulan yang tepat dari beberapa informasi dan memahami maksud pembicara dalam konteks kerja.",
+      sections: [
+        {
+          title: "Target belajar",
+          body: "User mampu membandingkan informasi, membaca kondisi, dan memahami alasan di balik sebuah instruksi.",
+        },
+        {
+          title: "Pola inti",
+          body: "Latih node, kara, tame ni, dan hou ga ii untuk alasan, tujuan, dan saran.",
+        },
+      ],
+      vocabulary: [
+        {
+          kanji: "理由",
+          kana: "りゆう",
+          furigana: "りゆう",
+          romaji: "riyuu",
+          meaning: "alasan",
+        },
+        {
+          kanji: "安全",
+          kana: "あんぜん",
+          furigana: "あんぜん",
+          romaji: "anzen",
+          meaning: "aman/keselamatan",
+        },
+      ],
+      examples: [
+        {
+          japanese: "安全のために、手袋を使ったほうがいいです。",
+          furigana: "あんぜんのために、てぶくろをつかったほうがいいです。",
+          romaji: "anzen no tame ni, tebukuro o tsukatta hou ga ii desu.",
+          meaning: "Demi keselamatan, sebaiknya menggunakan sarung tangan.",
+        },
+      ],
+      status: "PUBLISHED" as const,
+    },
+    ...["N5", "N4", "N3", "N2", "N1"].map((level, index) => ({
+      id: `jlpt-${level.toLowerCase()}-material`,
+      kind: "JLPT_MATERIAL" as const,
+      title: `Materi JLPT ${level}`,
+      slug: `jlpt-${level.toLowerCase()}-material`,
+      level,
+      category: "JLPT",
+      summary: `Peta belajar JLPT ${level}: kotoba, bunpou, dokkai, dan latihan pemahaman bertahap.`,
+      content:
+        index < 2
+          ? "Materi dasar berfokus pada pola kalimat umum, kosakata harian, dan bacaan pendek."
+          : "Materi lanjutan berfokus pada variasi ungkapan, bacaan lebih panjang, dan pemahaman konteks.",
+      sections: [
+        {
+          title: "Target belajar",
+          body: `User memahami area utama JLPT ${level} dan memiliki urutan belajar yang jelas sebelum latihan soal.`,
+        },
+        {
+          title: "Ritme latihan",
+          body: "Pelajari kosakata, baca contoh kalimat, lalu ulangi pola tata bahasa dengan soal pendek.",
+        },
+      ],
+      vocabulary: [
+        {
+          kanji: "毎日",
+          kana: "まいにち",
+          furigana: "まいにち",
+          romaji: "mainichi",
+          meaning: "setiap hari",
+        },
+        {
+          kanji: "勉強",
+          kana: "べんきょう",
+          furigana: "べんきょう",
+          romaji: "benkyou",
+          meaning: "belajar",
+        },
+      ],
+      examples: [
+        {
+          japanese: "毎日、日本語を勉強します。",
+          furigana: "まいにち、にほんごをべんきょうします。",
+          romaji: "mainichi, nihongo o benkyou shimasu.",
+          meaning: "Saya belajar bahasa Jepang setiap hari.",
+        },
+      ],
+      status: "PUBLISHED" as const,
+    })),
+  ];
+
+  for (const material of materialRows) {
+    const materialData = {
+      kind: material.kind,
+      title: material.title,
+      slug: material.slug,
+      level: material.level,
+      category: material.category,
+      summary: material.summary,
+      content: material.content,
+      sections: material.sections.map((section) => ({ ...section })),
+      vocabulary: material.vocabulary.map((item) => ({ ...item })),
+      examples: material.examples.map((item) => ({ ...item })),
+      status: material.status,
+    };
+
+    await prisma.studyMaterial.upsert({
+      where: { id: material.id },
+      update: materialData,
+      create: {
+        id: material.id,
+        ...materialData,
+      },
+    });
+  }
+
+  const packageRows = [
+    {
+      id: "seed-package-jft-material-a1",
+      kind: "JFT_MATERIAL",
+      title: "Materi JFT Basic A1",
+      slug: "jft-basic-a1-material",
+      subtitle: "Materi dasar untuk pemula",
+      previewDescription:
+        "Preview materi JFT Basic level awal untuk kosakata, pola kalimat, dan situasi harian.",
+      description:
+        "Paket materi JFT Basic A1 berisi ringkasan pelajaran, contoh dialog, dan latihan pemahaman untuk fondasi awal.",
+      level: "A1",
+      category: "JFT Basic",
+      price: 79000,
+      sortOrder: 10,
+      benefits: ["Materi ringkas", "Contoh dialog", "Progress belajar"],
+      metadata: { access: "paid", productGroup: "jft" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "JFT_MATERIAL",
+          contentId: "jft-basic-a1-material",
+          title: "Materi JFT Basic A1",
+        },
+      ],
+    },
+    {
+      id: "seed-package-jft-material-a2",
+      kind: "JFT_MATERIAL",
+      title: "Materi JFT Basic A2",
+      slug: "jft-basic-a2-material",
+      subtitle: "Materi JFT untuk target percakapan dasar",
+      previewDescription:
+        "Preview materi JFT Basic A2 untuk aktivitas harian, kerja, dan layanan publik.",
+      description:
+        "Paket materi JFT Basic A2 membantu user memahami teks pendek, percakapan praktis, dan kosakata umum.",
+      level: "A2",
+      category: "JFT Basic",
+      price: 89000,
+      sortOrder: 20,
+      benefits: ["Materi tematik", "Contoh soal ringan", "Progress belajar"],
+      metadata: { access: "paid", productGroup: "jft" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "JFT_MATERIAL",
+          contentId: "jft-basic-a2-material",
+          title: "Materi JFT Basic A2",
+        },
+      ],
+    },
+    {
+      id: "seed-package-jft-material-b1",
+      kind: "JFT_MATERIAL",
+      title: "Materi JFT Basic B1",
+      slug: "jft-basic-b1-material",
+      subtitle: "Materi lanjutan untuk pemahaman kerja",
+      previewDescription:
+        "Preview materi JFT Basic B1 untuk instruksi, informasi kerja, dan komunikasi lebih panjang.",
+      description:
+        "Paket materi JFT Basic B1 menyiapkan user membaca informasi lebih kompleks dan memahami percakapan kerja.",
+      level: "B1",
+      category: "JFT Basic",
+      price: 99000,
+      sortOrder: 30,
+      benefits: ["Materi lanjutan", "Latihan pemahaman", "Progress belajar"],
+      metadata: { access: "paid", productGroup: "jft" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "JFT_MATERIAL",
+          contentId: "jft-basic-b1-material",
+          title: "Materi JFT Basic B1",
+        },
+      ],
+    },
+    {
+      id: "seed-package-jft-material-b2",
+      kind: "JFT_MATERIAL",
+      title: "Materi JFT Basic B2",
+      slug: "jft-basic-b2-material",
+      subtitle: "Materi penguatan lanjutan",
+      previewDescription:
+        "Preview materi JFT Basic B2 untuk latihan pemahaman teks dan situasi yang lebih detail.",
+      description:
+        "Paket materi JFT Basic B2 berisi penguatan bacaan, kosakata kerja, dan pemahaman situasi panjang.",
+      level: "B2",
+      category: "JFT Basic",
+      price: 109000,
+      sortOrder: 40,
+      benefits: ["Materi penguatan", "Latihan bacaan", "Progress belajar"],
+      metadata: { access: "paid", productGroup: "jft" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "JFT_MATERIAL",
+          contentId: "jft-basic-b2-material",
+          title: "Materi JFT Basic B2",
+        },
+      ],
+    },
+    {
+      id: "seed-package-jft-question-a1",
+      kind: "JFT_QUESTION",
+      title: "Soal JFT Basic A1",
+      slug: "jft-basic-a1-question",
+      subtitle: "Latihan soal JFT pemula",
+      previewDescription:
+        "Preview latihan soal JFT Basic A1 untuk kosakata dan ekspresi harian.",
+      description:
+        "Paket soal JFT Basic A1 berisi latihan pilihan ganda, pembahasan, dan evaluasi kemampuan awal.",
+      level: "A1",
+      category: "JFT Basic",
+      price: 59000,
+      sortOrder: 50,
+      benefits: ["Latihan soal", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "jft" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "QUESTION_SET",
+          contentId: jftSet.id,
+          title: jftSet.title,
+        },
+      ],
+    },
+    {
+      id: "seed-package-jft-question-a2",
+      kind: "JFT_QUESTION",
+      title: "Soal JFT Basic A2",
+      slug: "jft-basic-a2-question",
+      subtitle: "Latihan soal JFT target A2",
+      previewDescription:
+        "Preview latihan soal JFT Basic A2 untuk situasi harian dan kerja sederhana.",
+      description:
+        "Paket soal JFT Basic A2 berisi latihan bertahap untuk mengevaluasi kesiapan ujian.",
+      level: "A2",
+      category: "JFT Basic",
+      price: 69000,
+      sortOrder: 60,
+      benefits: ["Latihan soal", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "jft" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "QUESTION_SET",
+          contentId: jftA2Set.id,
+          title: jftA2Set.title,
+        },
+      ],
+    },
+    {
+      id: "seed-package-jft-question-b1",
+      kind: "JFT_QUESTION",
+      title: "Soal JFT Basic B1",
+      slug: "jft-basic-b1-question",
+      subtitle: "Latihan soal JFT lanjutan",
+      previewDescription:
+        "Preview latihan soal JFT Basic B1 untuk instruksi kerja dan informasi lebih panjang.",
+      description:
+        "Paket soal JFT Basic B1 berisi latihan bertahap untuk pemahaman bacaan dan situasi kerja.",
+      level: "B1",
+      category: "JFT Basic",
+      price: 79000,
+      sortOrder: 65,
+      benefits: ["Latihan soal", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "jft" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "QUESTION_SET",
+          contentId: jftB1Set.id,
+          title: jftB1Set.title,
+        },
+      ],
+    },
+    {
+      id: "seed-package-jft-question-b2",
+      kind: "JFT_QUESTION",
+      title: "Soal JFT Basic B2",
+      slug: "jft-basic-b2-question",
+      subtitle: "Latihan soal JFT penguatan",
+      previewDescription:
+        "Preview latihan soal JFT Basic B2 untuk bacaan, instruksi, dan konteks detail.",
+      description:
+        "Paket soal JFT Basic B2 berisi latihan penguatan untuk user yang ingin mencoba soal lebih menantang.",
+      level: "B2",
+      category: "JFT Basic",
+      price: 89000,
+      sortOrder: 66,
+      benefits: ["Latihan soal", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "jft" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "QUESTION_SET",
+          contentId: jftB2Set.id,
+          title: jftB2Set.title,
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-material-n5",
+      kind: "JLPT_MATERIAL",
+      title: "Materi JLPT N5",
+      slug: "jlpt-n5-material",
+      subtitle: "Materi dasar JLPT N5",
+      previewDescription:
+        "Preview materi JLPT N5 untuk kotoba, bunpou, dokkai, dan choukai dasar.",
+      description:
+        "Paket materi JLPT N5 membantu user membangun fondasi kosakata, pola kalimat, dan latihan membaca dasar.",
+      level: "N5",
+      category: "JLPT",
+      price: 89000,
+      sortOrder: 70,
+      benefits: ["Materi N5", "Peta belajar", "Progress belajar"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "JLPT_MATERIAL",
+          contentId: "jlpt-n5-material",
+          title: "Materi JLPT N5",
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-question-n5",
+      kind: "JLPT_QUESTION",
+      title: "Soal JLPT N5",
+      slug: "jlpt-n5-question",
+      subtitle: "Latihan soal JLPT N5",
+      previewDescription:
+        "Preview soal JLPT N5 untuk kosakata dan pemahaman kalimat dasar.",
+      description:
+        "Paket soal JLPT N5 berisi latihan pilihan ganda, pembahasan, dan evaluasi nilai.",
+      level: "N5",
+      category: "JLPT",
+      price: 69000,
+      sortOrder: 80,
+      benefits: ["Latihan soal N5", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN5Set.id,
+          title: jlptN5Set.title,
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-material-n4",
+      kind: "JLPT_MATERIAL",
+      title: "Materi JLPT N4",
+      slug: "jlpt-n4-material",
+      subtitle: "Materi lanjutan JLPT N4",
+      previewDescription:
+        "Preview materi JLPT N4 untuk kosakata, tata bahasa, dan bacaan pendek.",
+      description:
+        "Paket materi JLPT N4 memperkuat pola kalimat, bacaan, dan pemahaman konteks sehari-hari.",
+      level: "N4",
+      category: "JLPT",
+      price: 99000,
+      sortOrder: 90,
+      benefits: ["Materi N4", "Peta belajar", "Progress belajar"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "JLPT_MATERIAL",
+          contentId: "jlpt-n4-material",
+          title: "Materi JLPT N4",
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-question-n4",
+      kind: "JLPT_QUESTION",
+      title: "Soal JLPT N4",
+      slug: "jlpt-n4-question",
+      subtitle: "Latihan soal JLPT N4",
+      previewDescription:
+        "Preview soal JLPT N4 untuk bunpou dan pemahaman kalimat.",
+      description:
+        "Paket soal JLPT N4 berisi latihan pilihan ganda, pembahasan, dan evaluasi nilai.",
+      level: "N4",
+      category: "JLPT",
+      price: 79000,
+      sortOrder: 100,
+      benefits: ["Latihan soal N4", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN4Set.id,
+          title: jlptN4Set.title,
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-material-n3",
+      kind: "JLPT_MATERIAL",
+      title: "Materi JLPT N3",
+      slug: "jlpt-n3-material",
+      subtitle: "Materi transisi menengah",
+      previewDescription:
+        "Preview materi JLPT N3 untuk bacaan, tata bahasa, dan kosakata menengah.",
+      description:
+        "Paket materi JLPT N3 disiapkan untuk user yang naik dari N4 menuju bacaan dan struktur lebih kompleks.",
+      level: "N3",
+      category: "JLPT",
+      price: 119000,
+      sortOrder: 110,
+      benefits: ["Materi N3", "Peta belajar", "Progress belajar"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "JLPT_MATERIAL",
+          contentId: "jlpt-n3-material",
+          title: "Materi JLPT N3",
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-question-n3",
+      kind: "JLPT_QUESTION",
+      title: "Soal JLPT N3",
+      slug: "jlpt-n3-question",
+      subtitle: "Latihan soal JLPT N3",
+      previewDescription:
+        "Preview soal JLPT N3 untuk latihan bertahap sebelum tryout.",
+      description:
+        "Paket soal JLPT N3 berisi latihan pilihan ganda, pembahasan, dan evaluasi nilai.",
+      level: "N3",
+      category: "JLPT",
+      price: 89000,
+      sortOrder: 120,
+      benefits: ["Latihan soal N3", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN3Set.id,
+          title: jlptN3Set.title,
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-material-n2",
+      kind: "JLPT_MATERIAL",
+      title: "Materi JLPT N2",
+      slug: "jlpt-n2-material",
+      subtitle: "Materi lanjutan JLPT N2",
+      previewDescription:
+        "Preview materi JLPT N2 untuk bacaan panjang, ungkapan formal, dan kosakata luas.",
+      description:
+        "Paket materi JLPT N2 disiapkan untuk user yang mengejar kemampuan akademik dan kerja lebih kuat.",
+      level: "N2",
+      category: "JLPT",
+      price: 139000,
+      sortOrder: 130,
+      benefits: ["Materi N2", "Peta belajar", "Progress belajar"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "JLPT_MATERIAL",
+          contentId: "jlpt-n2-material",
+          title: "Materi JLPT N2",
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-question-n2",
+      kind: "JLPT_QUESTION",
+      title: "Soal JLPT N2",
+      slug: "jlpt-n2-question",
+      subtitle: "Latihan soal JLPT N2",
+      previewDescription:
+        "Preview soal JLPT N2 untuk latihan bacaan, kosakata, dan tata bahasa.",
+      description:
+        "Paket soal JLPT N2 berisi latihan pilihan ganda, pembahasan, dan evaluasi nilai.",
+      level: "N2",
+      category: "JLPT",
+      price: 99000,
+      sortOrder: 140,
+      benefits: ["Latihan soal N2", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN2Set.id,
+          title: jlptN2Set.title,
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-material-n1",
+      kind: "JLPT_MATERIAL",
+      title: "Materi JLPT N1",
+      slug: "jlpt-n1-material",
+      subtitle: "Materi mahir JLPT N1",
+      previewDescription:
+        "Preview materi JLPT N1 untuk teks kompleks, ungkapan abstrak, dan kosakata mahir.",
+      description:
+        "Paket materi JLPT N1 disiapkan untuk user tingkat mahir yang butuh latihan konsisten.",
+      level: "N1",
+      category: "JLPT",
+      price: 159000,
+      sortOrder: 150,
+      benefits: ["Materi N1", "Peta belajar", "Progress belajar"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "JLPT_MATERIAL",
+          contentId: "jlpt-n1-material",
+          title: "Materi JLPT N1",
+        },
+      ],
+    },
+    {
+      id: "seed-package-jlpt-question-n1",
+      kind: "JLPT_QUESTION",
+      title: "Soal JLPT N1",
+      slug: "jlpt-n1-question",
+      subtitle: "Latihan soal JLPT N1",
+      previewDescription: "Preview soal JLPT N1 untuk latihan tingkat mahir.",
+      description:
+        "Paket soal JLPT N1 berisi latihan pilihan ganda, pembahasan, dan evaluasi nilai.",
+      level: "N1",
+      category: "JLPT",
+      price: 119000,
+      sortOrder: 160,
+      benefits: ["Latihan soal N1", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "jlpt" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN1Set.id,
+          title: jlptN1Set.title,
+        },
+      ],
+    },
+    {
+      id: "seed-package-ssw-question-kaigo",
+      kind: "SSW_QUESTION",
+      title: "Soal SSW Kaigo",
+      slug: "ssw-kaigo-question",
+      subtitle: "Latihan soal SSW bidang kaigo",
+      previewDescription:
+        "Preview soal SSW Kaigo untuk istilah kerja, situasi perawatan, dan pemahaman instruksi.",
+      description:
+        "Paket soal SSW Kaigo berisi latihan pilihan ganda, pembahasan, dan evaluasi untuk persiapan ujian keterampilan.",
+      level: "SSW",
+      category: "Kaigo",
+      price: 99000,
+      sortOrder: 170,
+      benefits: ["Latihan soal SSW", "Pembahasan", "Riwayat nilai"],
+      metadata: { access: "paid", productGroup: "ssw" },
+      status: "PUBLISHED",
+      contents: [
+        {
+          contentType: "SSW_MODULE",
+          contentId: module.id,
+          title: module.title,
+        },
+      ],
+    },
+  ] as const;
+
+  for (const packageRow of packageRows) {
+    const { contents, id, benefits, metadata, ...data } = packageRow;
+    const packageData = {
+      ...data,
+      benefits: Array.from(benefits),
+      metadata: { ...metadata },
+    };
+
+    const savedPackage = await prisma.productPackage.upsert({
+      where: { slug: packageRow.slug },
+      update: packageData,
+      create: {
+        id,
+        ...packageData,
+      },
+    });
+
+    await prisma.packageContent.deleteMany({
+      where: { packageId: savedPackage.id },
+    });
+
+    for (const [index, content] of contents.entries()) {
+      await prisma.packageContent.create({
+        data: {
+          packageId: savedPackage.id,
+          contentType: content.contentType,
+          contentId: content.contentId,
+          title: content.title,
+          sortOrder: index + 1,
+        },
+      });
+    }
+  }
 
   const scheduleRows = [
     {

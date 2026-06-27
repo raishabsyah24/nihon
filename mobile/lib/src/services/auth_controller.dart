@@ -111,6 +111,20 @@ class AuthController extends ChangeNotifier {
     });
   }
 
+  Future<void> sendPasswordResetEmail() async {
+    await _guarded(() async {
+      _requireFirebase();
+      final email =
+          firebase.FirebaseAuth.instance.currentUser?.email ?? _profile?.email;
+      if (email == null || email.trim().isEmpty) {
+        throw StateError('Email akun belum tersedia untuk reset password.');
+      }
+      await firebase.FirebaseAuth.instance.sendPasswordResetEmail(
+        email: email.trim(),
+      );
+    });
+  }
+
   Future<void> refreshProfile() async {
     if (!_firebaseReady) {
       return;
@@ -163,6 +177,7 @@ class AuthController extends ChangeNotifier {
       role: admin ? 'ADMIN' : 'USER',
       email: admin ? 'admin@nihoneikitai.local' : 'user@nihoneikitai.local',
       displayName: admin ? 'Demo Admin' : 'Demo User',
+      phoneNumber: null,
     );
     _errorMessage = null;
     notifyListeners();
@@ -214,6 +229,7 @@ class AuthController extends ChangeNotifier {
       id: user.uid,
       role: 'USER',
       email: user.email,
+      phoneNumber: user.phoneNumber,
       displayName: user.displayName,
       photoUrl: user.photoURL,
     );

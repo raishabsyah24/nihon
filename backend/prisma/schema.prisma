@@ -34,16 +34,81 @@ enum ExamType {
   SSW
 }
 
+enum ProductPackageKind {
+  JFT_MATERIAL
+  JFT_QUESTION
+  JLPT_MATERIAL
+  JLPT_QUESTION
+  SSW_QUESTION
+}
+
+enum PackageContentType {
+  JFT_MATERIAL
+  JLPT_MATERIAL
+  QUESTION_SET
+  SSW_MODULE
+  SSW_CATEGORY
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum EntitlementSource {
+  PURCHASE
+  MANUAL
+  PROMO
+}
+
+enum LearningProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum LearningContentType {
+  KANA
+  KOTOBA
+  JFT_MATERIAL
+  JLPT_MATERIAL
+  SSW_MODULE
+  QUESTION_SET
+  QUESTION
+  PACKAGE
+}
+
+enum DiscountKind {
+  FIXED_AMOUNT
+  PERCENTAGE
+}
+
+enum LoyaltyTransactionType {
+  EARN
+  SPEND
+  ADJUSTMENT
+  EXPIRE
+  REFUND
+}
+
 model User {
-  id          String   @id @default(cuid())
-  firebaseUid String  @unique
-  email       String?
-  phoneNumber String?
-  displayName String?
-  photoUrl    String?  @db.VarChar(512)
-  role        Role    @default(USER)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                  String               @id @default(cuid())
+  firebaseUid         String               @unique
+  email               String?
+  phoneNumber         String?
+  displayName         String?
+  photoUrl            String?              @db.VarChar(512)
+  role                Role                 @default(USER)
+  profile             UserProfile?
+  orders              Order[]
+  entitlements        UserEntitlement[]
+  learningProgress    LearningProgress[]
+  loyaltyAccount      LoyaltyAccount?
+  loyaltyTransactions LoyaltyTransaction[]
+  voucherRedemptions  VoucherRedemption[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
 }
 
 model Kana {
@@ -142,6 +207,26 @@ model SswModule {
   @@index([categoryId])
 }
 
+model StudyMaterial {
+  id         String             @id @default(cuid())
+  kind       ProductPackageKind
+  title      String
+  slug       String             @unique
+  level      String?
+  category   String?
+  summary    String?            @db.Text
+  content    String             @db.Text
+  sections   Json?
+  vocabulary Json?
+  examples   Json?
+  status     PublishStatus      @default(DRAFT)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  @@index([kind, level, category])
+  @@index([status, createdAt])
+}
+
 model ExamSchedule {
   id          String        @id @default(cuid())
   type        ExamType
@@ -169,4 +254,277 @@ model JapanNews {
   status      PublishStatus @default(DRAFT)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+}
+
+model UserProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName    String?
+  phoneNumber String?
+  addressLine String?  @db.Text
+  city        String?
+  province    String?
+  postalCode  String?
+  country     String   @default("Indonesia")
+  birthDate   DateTime?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ProductPackage {
+  id                 String                @id @default(cuid())
+  kind               ProductPackageKind
+  title              String
+  slug               String                @unique
+  subtitle           String?
+  previewDescription String?               @db.Text
+  description        String?               @db.Text
+  level              String?
+  category           String?
+  price              Int
+  currency           String                @default("IDR")
+  benefits           Json?
+  metadata           Json?
+  status             PublishStatus         @default(DRAFT)
+  sortOrder          Int                   @default(0)
+  contents           PackageContent[]
+  orderItems         OrderItem[]
+  entitlements       UserEntitlement[]
+  promoPackages      PromoPackage[]
+  voucherPackages    VoucherPackage[]
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+
+  @@index([kind, level, category])
+  @@index([status, sortOrder])
+}
+
+model PackageContent {
+  id          String             @id @default(cuid())
+  packageId   String
+  package     ProductPackage     @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  contentType PackageContentType
+  contentId   String
+  title       String?
+  sortOrder   Int                @default(0)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@unique([packageId, contentType, contentId])
+  @@index([contentType, contentId])
+}
+
+model Order {
+  id             String               @id @default(cuid())
+  orderNumber    String               @unique
+  userId         String
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status         OrderStatus          @default(PENDING)
+  subtotal       Int
+  promoDiscount  Int                  @default(0)
+  voucherDiscount Int                 @default(0)
+  pointDiscount  Int                  @default(0)
+  total          Int
+  currency       String               @default("IDR")
+  promoId        String?
+  promo          Promo?               @relation(fields: [promoId], references: [id], onDelete: SetNull)
+  voucherId      String?
+  voucher        Voucher?             @relation(fields: [voucherId], references: [id], onDelete: SetNull)
+  pointsUsed     Int                  @default(0)
+  pointsEarned   Int                  @default(0)
+  paidAt         DateTime?
+  cancelledAt    DateTime?
+  metadata       Json?
+  items          OrderItem[]
+  entitlements   UserEntitlement[]
+  voucherRedemption VoucherRedemption?
+  loyaltyTransactions LoyaltyTransaction[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  @@index([userId, status, createdAt])
+  @@index([promoId])
+  @@index([voucherId])
+}
+
+model OrderItem {
+  id            String         @id @default(cuid())
+  orderId       String
+  order         Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  packageId     String
+  package       ProductPackage @relation(fields: [packageId], references: [id], onDelete: Restrict)
+  titleSnapshot String
+  price         Int
+  quantity      Int            @default(1)
+  subtotal      Int
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@unique([orderId, packageId])
+  @@index([packageId])
+}
+
+model UserEntitlement {
+  id            String            @id @default(cuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packageId     String
+  package       ProductPackage    @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  source        EntitlementSource @default(PURCHASE)
+  sourceOrderId String?
+  sourceOrder   Order?            @relation(fields: [sourceOrderId], references: [id], onDelete: SetNull)
+  startsAt      DateTime          @default(now())
+  expiresAt     DateTime?
+  revokedAt     DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@unique([userId, packageId])
+  @@index([packageId])
+  @@index([sourceOrderId])
+}
+
+model LearningProgress {
+  id             String                 @id @default(cuid())
+  userId         String
+  user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentType    LearningContentType
+  contentId      String
+  packageId      String?
+  status         LearningProgressStatus @default(NOT_STARTED)
+  progressPercent Int                   @default(0)
+  score          Int?
+  bestScore      Int?
+  attempts       Int                    @default(0)
+  startedAt      DateTime?
+  completedAt    DateTime?
+  lastAccessedAt DateTime               @default(now())
+  metadata       Json?
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  @@unique([userId, contentType, contentId])
+  @@index([userId, status])
+  @@index([contentType, contentId])
+  @@index([packageId])
+}
+
+model Promo {
+  id              String             @id @default(cuid())
+  code            String?            @unique
+  title           String
+  description     String?            @db.Text
+  discountKind    DiscountKind
+  discountValue   Int
+  maxDiscount     Int?
+  minimumSubtotal Int                @default(0)
+  targetKind      ProductPackageKind?
+  startsAt        DateTime?
+  endsAt          DateTime?
+  usageLimit      Int?
+  usedCount       Int                @default(0)
+  stackable       Boolean            @default(false)
+  status          PublishStatus      @default(DRAFT)
+  orders          Order[]
+  promoPackages   PromoPackage[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([status, startsAt, endsAt])
+  @@index([targetKind])
+}
+
+model PromoPackage {
+  id        String         @id @default(cuid())
+  promoId   String
+  promo     Promo          @relation(fields: [promoId], references: [id], onDelete: Cascade)
+  packageId String
+  package   ProductPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@unique([promoId, packageId])
+  @@index([packageId])
+}
+
+model Voucher {
+  id              String              @id @default(cuid())
+  code            String              @unique
+  title           String
+  description     String?             @db.Text
+  discountKind    DiscountKind
+  discountValue   Int
+  maxDiscount     Int?
+  minimumSubtotal Int                 @default(0)
+  targetKind      ProductPackageKind?
+  startsAt        DateTime?
+  endsAt          DateTime?
+  usageLimit      Int?
+  usedCount       Int                 @default(0)
+  perUserLimit    Int                 @default(1)
+  status          PublishStatus       @default(DRAFT)
+  orders          Order[]
+  redemptions     VoucherRedemption[]
+  voucherPackages VoucherPackage[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([status, startsAt, endsAt])
+  @@index([targetKind])
+}
+
+model VoucherPackage {
+  id        String         @id @default(cuid())
+  voucherId String
+  voucher   Voucher        @relation(fields: [voucherId], references: [id], onDelete: Cascade)
+  packageId String
+  package   ProductPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@unique([voucherId, packageId])
+  @@index([packageId])
+}
+
+model VoucherRedemption {
+  id             String   @id @default(cuid())
+  voucherId      String
+  voucher        Voucher  @relation(fields: [voucherId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderId        String   @unique
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  discountAmount Int
+  redeemedAt     DateTime @default(now())
+
+  @@index([voucherId, userId])
+}
+
+model LoyaltyAccount {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pointsBalance  Int      @default(0)
+  lifetimeEarned Int      @default(0)
+  lifetimeSpent  Int      @default(0)
+  transactions   LoyaltyTransaction[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model LoyaltyTransaction {
+  id           String                 @id @default(cuid())
+  userId       String
+  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId    String
+  account      LoyaltyAccount         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  orderId      String?
+  order        Order?                 @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  type         LoyaltyTransactionType
+  points       Int
+  balanceAfter Int
+  note         String?                @db.Text
+  createdAt    DateTime               @default(now())
+
+  @@index([userId, createdAt])
+  @@index([accountId])
+  @@index([orderId])
 }

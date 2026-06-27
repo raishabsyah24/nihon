@@ -5,14 +5,18 @@ import {
   BookOpen,
   CalendarDays,
   FileQuestion,
+  GraduationCap,
   Home,
   Layers,
   LogOut,
   Menu,
   Newspaper,
+  PackagePlus,
+  Percent,
+  ReceiptText,
   Shield,
   Users,
-  X
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -22,17 +26,21 @@ import { useAuth } from "@/lib/auth";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: Home },
+  { href: "/packages", label: "Paket Jualan", icon: PackagePlus },
+  { href: "/orders", label: "Order", icon: ReceiptText },
+  { href: "/promotions", label: "Promo & Voucher", icon: Percent },
   { href: "/kotoba", label: "Kotoba", icon: BookOpen },
-  { href: "/jft/sets", label: "Paket JFT", icon: FileQuestion },
+  { href: "/study-materials", label: "Materi JFT/JLPT", icon: GraduationCap },
+  { href: "/jft/sets", label: "Set JFT", icon: FileQuestion },
   { href: "/jft", label: "Soal JFT", icon: FileQuestion },
-  { href: "/jlpt/sets", label: "Paket JLPT", icon: FileQuestion },
+  { href: "/jlpt/sets", label: "Set JLPT", icon: FileQuestion },
   { href: "/jlpt", label: "Soal JLPT", icon: FileQuestion },
   { href: "/ssw/categories", label: "Kategori SSW", icon: Layers },
   { href: "/ssw/modules", label: "Modul SSW", icon: Layers },
   { href: "/ssw/questions", label: "Soal SSW", icon: FileQuestion },
   { href: "/exam-schedules", label: "Jadwal Ujian", icon: CalendarDays },
   { href: "/japan-news", label: "Berita Jepang", icon: Newspaper },
-  { href: "/users", label: "Users", icon: Users }
+  { href: "/users", label: "Users", icon: Users },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -107,7 +115,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <Shield size={18} />
             <strong>Admin</strong>
           </div>
-          <span className="muted">{profile?.email ?? profile?.displayName}</span>
+          <span className="muted">
+            {profile?.email ?? profile?.displayName}
+          </span>
         </header>
         <main className="content">{children}</main>
       </div>

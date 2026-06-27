@@ -21,6 +21,102 @@ class ApiClient {
     return data.whereType<JsonMap>().map(Kotoba.fromJson).toList();
   }
 
+  Future<HomeCatalog> getHomeCatalog() async {
+    final data = await _getMap('/catalog/home');
+    return HomeCatalog.fromJson(data);
+  }
+
+  Future<List<ProductPackage>> getPackages({String? kind, String? level}) async {
+    final data = await _getList(
+      '/packages',
+      query: {'kind': kind, 'level': level},
+    );
+    return data.whereType<JsonMap>().map(ProductPackage.fromJson).toList();
+  }
+
+  Future<ProductPackage> getMyPackage(String idOrSlug) async {
+    final data = await _getMap('/me/packages/$idOrSlug');
+    return ProductPackage.fromJson(data);
+  }
+
+  Future<List<UserEntitlement>> getMyEntitlements() async {
+    final data = await _getList('/me/entitlements');
+    return data.whereType<JsonMap>().map(UserEntitlement.fromJson).toList();
+  }
+
+  Future<List<LearningProgress>> getMyProgress() async {
+    final data = await _getList('/me/progress');
+    return data.whereType<JsonMap>().map(LearningProgress.fromJson).toList();
+  }
+
+  Future<LearningProgress> upsertProgress({
+    required String contentType,
+    required String contentId,
+    String? packageId,
+    int? progressPercent,
+    String? status,
+    int? score,
+    int? bestScore,
+    int? attempts,
+  }) async {
+    final data = await _postMap('/me/progress', {
+      'contentType': contentType,
+      'contentId': contentId,
+      if (packageId != null && packageId.trim().isNotEmpty)
+        'packageId': packageId,
+      'progressPercent': ?progressPercent,
+      'status': ?status,
+      'score': ?score,
+      'bestScore': ?bestScore,
+      'attempts': ?attempts,
+    });
+    return LearningProgress.fromJson(data);
+  }
+
+  Future<ExamSchedule?> getMyExamScheduleSelection() async {
+    final data = await _getMap('/me/exam-schedule');
+    return ExamScheduleSelection.fromJson(data).schedule;
+  }
+
+  Future<ExamSchedule?> selectMyExamSchedule(String examScheduleId) async {
+    final data = await _postMap('/me/exam-schedule', {
+      'examScheduleId': examScheduleId,
+    });
+    return ExamScheduleSelection.fromJson(data).schedule;
+  }
+
+  Future<void> clearMyExamScheduleSelection() async {
+    await _deleteMap('/me/exam-schedule');
+  }
+
+  Future<UserProfileDetail> getMyProfile() async {
+    final data = await _getMap('/me/profile');
+    return UserProfileDetail.fromJson(data);
+  }
+
+  Future<UserProfileDetail> updateMyProfile({
+    String? displayName,
+    String? fullName,
+    String? phoneNumber,
+    String? addressLine,
+    String? city,
+    String? province,
+    String? postalCode,
+    String? country,
+  }) async {
+    final data = await _patchMap('/me/profile', {
+      'displayName': displayName,
+      'fullName': fullName,
+      'phoneNumber': phoneNumber,
+      'addressLine': addressLine,
+      'city': city,
+      'province': province,
+      'postalCode': postalCode,
+      'country': country,
+    });
+    return UserProfileDetail.fromJson(data);
+  }
+
   Future<List<QuestionItem>> getJlptQuestions({String? level}) async {
     final data = await _getList('/jlpt/questions', query: {'level': level});
     return data.whereType<JsonMap>().map(QuestionItem.fromJson).toList();
@@ -33,6 +129,11 @@ class ApiClient {
 
   Future<QuestionSet> getJlptQuestionSet(String id) async {
     final data = await _getMap('/jlpt/question-sets/$id');
+    return QuestionSet.fromJson(data);
+  }
+
+  Future<QuestionSet> getMyJlptQuestionSet(String id) async {
+    final data = await _getMap('/me/jlpt/question-sets/$id');
     return QuestionSet.fromJson(data);
   }
 
@@ -57,6 +158,11 @@ class ApiClient {
     return QuestionSet.fromJson(data);
   }
 
+  Future<QuestionSet> getMyJftQuestionSet(String id) async {
+    final data = await _getMap('/me/jft/question-sets/$id');
+    return QuestionSet.fromJson(data);
+  }
+
   Future<List<SswCategory>> getSswCategories() async {
     final data = await _getList('/ssw/categories');
     return data.whereType<JsonMap>().map(SswCategory.fromJson).toList();
@@ -65,6 +171,21 @@ class ApiClient {
   Future<SswModule> getSswModule(String id) async {
     final data = await _getMap('/ssw/modules/$id');
     return SswModule.fromJson(data);
+  }
+
+  Future<SswModule> getMySswModule(String id) async {
+    final data = await _getMap('/me/ssw/modules/$id');
+    return SswModule.fromJson(data);
+  }
+
+  Future<StudyMaterial> getStudyMaterial(String idOrSlug) async {
+    final data = await _getMap('/study-materials/$idOrSlug');
+    return StudyMaterial.fromJson(data);
+  }
+
+  Future<StudyMaterial> getMyStudyMaterial(String idOrSlug) async {
+    final data = await _getMap('/me/study-materials/$idOrSlug');
+    return StudyMaterial.fromJson(data);
   }
 
   Future<List<ExamSchedule>> getExamSchedules({String? type}) async {
@@ -87,6 +208,30 @@ class ApiClient {
     return JapanNews.fromJson(data);
   }
 
+  Future<OrderSummary> createOrder({
+    required List<String> packageIds,
+    String? voucherCode,
+    int pointsToUse = 0,
+  }) async {
+    final data = await _postMap('/orders', {
+      'packageIds': packageIds,
+      if (voucherCode != null && voucherCode.trim().isNotEmpty)
+        'voucherCode': voucherCode.trim(),
+      if (pointsToUse > 0) 'pointsToUse': pointsToUse,
+    });
+    return OrderSummary.fromJson(data);
+  }
+
+  Future<List<OrderSummary>> getMyOrders() async {
+    final data = await _getList('/me/orders');
+    return data.whereType<JsonMap>().map(OrderSummary.fromJson).toList();
+  }
+
+  Future<OrderSummary> getMyOrder(String id) async {
+    final data = await _getMap('/me/orders/$id');
+    return OrderSummary.fromJson(data);
+  }
+
   Future<List<dynamic>> _getList(
     String path, {
     Map<String, String?> query = const {},
@@ -104,6 +249,46 @@ class ApiClient {
     Map<String, String?> query = const {},
   }) async {
     final response = await _get(path, query: query);
+    final decoded = jsonDecode(response.body);
+    if (decoded is JsonMap) {
+      return decoded;
+    }
+    throw ApiException('Response API bukan object.');
+  }
+
+  Future<JsonMap> _postMap(String path, JsonMap body) async {
+    final response = await _sendJson('POST', path, body);
+    final decoded = jsonDecode(response.body);
+    if (decoded is JsonMap) {
+      return decoded;
+    }
+    throw ApiException('Response API bukan object.');
+  }
+
+  Future<JsonMap> _patchMap(String path, JsonMap body) async {
+    final response = await _sendJson('PATCH', path, body);
+    final decoded = jsonDecode(response.body);
+    if (decoded is JsonMap) {
+      return decoded;
+    }
+    throw ApiException('Response API bukan object.');
+  }
+
+  Future<JsonMap> _deleteMap(String path) async {
+    final token = await tokenProvider();
+    final uri = Uri.parse('$baseUrl$path');
+    final response = await http.delete(
+      uri,
+      headers: {
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException('API error ${response.statusCode}: ${response.body}');
+    }
+
     final decoded = jsonDecode(response.body);
     if (decoded is JsonMap) {
       return decoded;
@@ -131,6 +316,33 @@ class ApiClient {
         if (token != null) 'Authorization': 'Bearer $token',
       },
     );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException('API error ${response.statusCode}: ${response.body}');
+    }
+
+    return response;
+  }
+
+  Future<http.Response> _sendJson(
+    String method,
+    String path,
+    JsonMap body,
+  ) async {
+    final token = await tokenProvider();
+    final uri = Uri.parse('$baseUrl$path');
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+    final encoded = jsonEncode(body);
+
+    final response = switch (method) {
+      'POST' => await http.post(uri, headers: headers, body: encoded),
+      'PATCH' => await http.patch(uri, headers: headers, body: encoded),
+      _ => throw ApiException('HTTP method tidak didukung.'),
+    };
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiException('API error ${response.statusCode}: ${response.body}');

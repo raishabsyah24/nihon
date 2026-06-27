@@ -3,9 +3,10 @@ import {
   BriefcaseBusiness,
   CalendarDays,
   FileQuestion,
+  GraduationCap,
   Layers,
   Newspaper,
-  type LucideIcon
+  type LucideIcon,
 } from "lucide-react";
 
 export type FieldKind =
@@ -15,6 +16,7 @@ export type FieldKind =
   | "number"
   | "datetime"
   | "lines"
+  | "sections"
   | "vocabulary"
   | "examples";
 
@@ -41,10 +43,11 @@ const statusField: ResourceField = {
   label: "Status",
   kind: "select",
   options: ["DRAFT", "PUBLISHED"],
-  required: true
+  required: true,
 };
 
-const slugHelp = "Huruf kecil, angka, dan tanda hubung. Contoh: jlpt-n5-kotoba.";
+const slugHelp =
+  "Huruf kecil, angka, dan tanda hubung. Contoh: jlpt-n5-kotoba.";
 
 const questionFields: ResourceField[] = [
   { name: "questionSetId", label: "Question Set ID", kind: "text" },
@@ -56,11 +59,11 @@ const questionFields: ResourceField[] = [
     label: "Index jawaban benar",
     kind: "number",
     required: true,
-    help: "Mulai dari 0 sesuai urutan pilihan jawaban."
+    help: "Mulai dari 0 sesuai urutan pilihan jawaban.",
   },
   { name: "explanation", label: "Pembahasan", kind: "textarea" },
   { name: "sortOrder", label: "Urutan", kind: "number" },
-  statusField
+  statusField,
 ];
 
 export const resources = {
@@ -77,8 +80,65 @@ export const resources = {
       { name: "romaji", label: "Romaji", kind: "text" },
       { name: "meaning", label: "Arti", kind: "text", required: true },
       { name: "exampleSentence", label: "Contoh kalimat", kind: "textarea" },
-      statusField
-    ]
+      statusField,
+    ],
+  },
+  studyMaterials: {
+    key: "studyMaterials",
+    title: "Materi JFT/JLPT",
+    endpoint: "/admin/study-materials",
+    icon: GraduationCap,
+    columns: ["kind", "title", "level", "category", "status"],
+    fields: [
+      {
+        name: "kind",
+        label: "Jenis materi",
+        kind: "select",
+        options: ["JFT_MATERIAL", "JLPT_MATERIAL"],
+        required: true,
+      },
+      { name: "title", label: "Judul", kind: "text", required: true },
+      {
+        name: "slug",
+        label: "Slug",
+        kind: "text",
+        required: true,
+        help: slugHelp,
+      },
+      {
+        name: "level",
+        label: "Level",
+        kind: "text",
+        help: "Contoh: A1, A2, B1, B2, N5, N4.",
+      },
+      { name: "category", label: "Kategori", kind: "text" },
+      { name: "summary", label: "Ringkasan", kind: "textarea" },
+      {
+        name: "content",
+        label: "Materi utama",
+        kind: "textarea",
+        required: true,
+      },
+      {
+        name: "sections",
+        label: "Section materi",
+        kind: "sections",
+        help: "Satu baris per section: judul | isi",
+      },
+      {
+        name: "vocabulary",
+        label: "Kosakata Jepang",
+        kind: "vocabulary",
+        help: "Satu baris per kosakata: kanji | kana | furigana | romaji | arti",
+      },
+      {
+        name: "examples",
+        label: "Contoh kalimat",
+        kind: "examples",
+        help: "Satu baris per contoh: kalimat Jepang | furigana | romaji | arti",
+      },
+      statusField,
+    ],
   },
   jlpt: {
     key: "jlpt",
@@ -92,10 +152,10 @@ export const resources = {
         label: "Level",
         kind: "select",
         options: ["N5", "N4", "N3", "N2", "N1"],
-        required: true
+        required: true,
       },
-      ...questionFields
-    ]
+      ...questionFields,
+    ],
   },
   jlptSets: {
     key: "jlptSets",
@@ -105,25 +165,31 @@ export const resources = {
     columns: ["title", "level", "category", "durationMinutes", "status"],
     fields: [
       { name: "title", label: "Judul paket", kind: "text", required: true },
-      { name: "slug", label: "Slug", kind: "text", required: true, help: slugHelp },
+      {
+        name: "slug",
+        label: "Slug",
+        kind: "text",
+        required: true,
+        help: slugHelp,
+      },
       { name: "description", label: "Deskripsi", kind: "textarea" },
       {
         name: "level",
         label: "Level",
         kind: "select",
         options: ["N5", "N4", "N3", "N2", "N1"],
-        required: true
+        required: true,
       },
       {
         name: "category",
         label: "Kategori",
         kind: "select",
         options: ["kotoba", "bunpou", "dokkai", "choukai"],
-        required: true
+        required: true,
       },
       { name: "durationMinutes", label: "Durasi menit", kind: "number" },
-      statusField
-    ]
+      statusField,
+    ],
   },
   jft: {
     key: "jft",
@@ -131,7 +197,7 @@ export const resources = {
     endpoint: "/admin/jft/questions",
     icon: FileQuestion,
     columns: ["category", "prompt", "status"],
-    fields: questionFields
+    fields: questionFields,
   },
   jftSets: {
     key: "jftSets",
@@ -141,18 +207,24 @@ export const resources = {
     columns: ["title", "category", "durationMinutes", "status"],
     fields: [
       { name: "title", label: "Judul paket", kind: "text", required: true },
-      { name: "slug", label: "Slug", kind: "text", required: true, help: slugHelp },
+      {
+        name: "slug",
+        label: "Slug",
+        kind: "text",
+        required: true,
+        help: slugHelp,
+      },
       { name: "description", label: "Deskripsi", kind: "textarea" },
       {
         name: "category",
         label: "Kategori",
         kind: "select",
         options: ["daily", "work", "life", "reading", "listening"],
-        required: true
+        required: true,
       },
       { name: "durationMinutes", label: "Durasi menit", kind: "number" },
-      statusField
-    ]
+      statusField,
+    ],
   },
   sswCategories: {
     key: "sswCategories",
@@ -162,10 +234,16 @@ export const resources = {
     columns: ["title", "slug", "status"],
     fields: [
       { name: "title", label: "Judul", kind: "text", required: true },
-      { name: "slug", label: "Slug", kind: "text", required: true, help: slugHelp },
+      {
+        name: "slug",
+        label: "Slug",
+        kind: "text",
+        required: true,
+        help: slugHelp,
+      },
       { name: "description", label: "Deskripsi", kind: "textarea" },
-      statusField
-    ]
+      statusField,
+    ],
   },
   sswModules: {
     key: "sswModules",
@@ -174,25 +252,36 @@ export const resources = {
     icon: BriefcaseBusiness,
     columns: ["title", "slug", "categoryId", "vocabulary", "status"],
     fields: [
-      { name: "categoryId", label: "Category ID", kind: "text", required: true },
+      {
+        name: "categoryId",
+        label: "Category ID",
+        kind: "text",
+        required: true,
+      },
       { name: "title", label: "Judul", kind: "text", required: true },
-      { name: "slug", label: "Slug", kind: "text", required: true, help: slugHelp },
+      {
+        name: "slug",
+        label: "Slug",
+        kind: "text",
+        required: true,
+        help: slugHelp,
+      },
       { name: "summary", label: "Ringkasan", kind: "textarea" },
       { name: "content", label: "Materi", kind: "textarea", required: true },
       {
         name: "vocabulary",
         label: "Kosakata Jepang",
         kind: "vocabulary",
-        help: "Satu baris per kosakata: kanji | kana | furigana | romaji | arti"
+        help: "Satu baris per kosakata: kanji | kana | furigana | romaji | arti",
       },
       {
         name: "examples",
         label: "Contoh kalimat",
         kind: "examples",
-        help: "Satu baris per contoh: kalimat Jepang | furigana | romaji | arti"
+        help: "Satu baris per contoh: kalimat Jepang | furigana | romaji | arti",
       },
-      statusField
-    ]
+      statusField,
+    ],
   },
   sswQuestions: {
     key: "sswQuestions",
@@ -201,9 +290,14 @@ export const resources = {
     icon: FileQuestion,
     columns: ["category", "sswModuleId", "prompt", "status"],
     fields: [
-      { name: "sswModuleId", label: "SSW Module ID", kind: "text", required: true },
-      ...questionFields
-    ]
+      {
+        name: "sswModuleId",
+        label: "SSW Module ID",
+        kind: "text",
+        required: true,
+      },
+      ...questionFields,
+    ],
   },
   schedules: {
     key: "schedules",
@@ -217,16 +311,21 @@ export const resources = {
         label: "Tipe ujian",
         kind: "select",
         options: ["JFT", "JLPT", "SSW"],
-        required: true
+        required: true,
       },
       { name: "title", label: "Judul", kind: "text", required: true },
       { name: "location", label: "Lokasi", kind: "text" },
-      { name: "startsAt", label: "Tanggal mulai", kind: "datetime", required: true },
+      {
+        name: "startsAt",
+        label: "Tanggal mulai",
+        kind: "datetime",
+        required: true,
+      },
       { name: "endsAt", label: "Tanggal akhir", kind: "datetime" },
       { name: "registerUrl", label: "Link pendaftaran", kind: "text" },
       { name: "description", label: "Deskripsi", kind: "textarea" },
-      statusField
-    ]
+      statusField,
+    ],
   },
   news: {
     key: "news",
@@ -236,18 +335,25 @@ export const resources = {
     columns: ["title", "category", "publishedAt", "status"],
     fields: [
       { name: "title", label: "Judul", kind: "text", required: true },
-      { name: "slug", label: "Slug", kind: "text", required: true, help: slugHelp },
+      {
+        name: "slug",
+        label: "Slug",
+        kind: "text",
+        required: true,
+        help: slugHelp,
+      },
       { name: "thumbnail", label: "Thumbnail URL", kind: "text" },
       { name: "body", label: "Isi berita", kind: "textarea", required: true },
       { name: "category", label: "Kategori", kind: "text" },
       { name: "publishedAt", label: "Tanggal publish", kind: "datetime" },
-      statusField
-    ]
-  }
+      statusField,
+    ],
+  },
 } satisfies Record<string, ResourceConfig>;
 
 export const dashboardResources = [
   resources.kotoba,
+  resources.studyMaterials,
   resources.jlptSets,
   resources.jlpt,
   resources.jftSets,
@@ -256,5 +362,5 @@ export const dashboardResources = [
   resources.sswModules,
   resources.sswQuestions,
   resources.schedules,
-  resources.news
+  resources.news,
 ];

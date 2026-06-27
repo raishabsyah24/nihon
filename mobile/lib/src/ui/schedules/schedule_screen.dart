@@ -16,6 +16,19 @@ class ScheduleScreen extends StatefulWidget {
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
   String? _type;
+  late Future<ExamSchedule?> _selectionFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectionFuture = widget.apiClient.getMyExamScheduleSelection();
+  }
+
+  void _refreshSelection() {
+    setState(() {
+      _selectionFuture = widget.apiClient.getMyExamScheduleSelection();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,19 +58,33 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               ),
             ),
             Expanded(
-              child: AsyncContent<List<ExamSchedule>>(
-                future: widget.apiClient.getExamSchedules(type: _type),
-                fallback: _demoSchedules
-                    .where((item) => _type == null || item.type == _type)
-                    .toList(),
-                isEmpty: (items) => items.isEmpty,
-                builder: (context, schedules) {
-                  return ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: schedules.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) =>
-                        _ScheduleTile(schedule: schedules[index]),
+              child: FutureBuilder<ExamSchedule?>(
+                future: _selectionFuture,
+                builder: (context, selectionSnapshot) {
+                  final selectedId = selectionSnapshot.data?.id;
+
+                  return AsyncContent<List<ExamSchedule>>(
+                    future: widget.apiClient.getExamSchedules(type: _type),
+                    fallback: _demoSchedules
+                        .where((item) => _type == null || item.type == _type)
+                        .toList(),
+                    isEmpty: (items) => items.isEmpty,
+                    builder: (context, schedules) {
+                      return ListView.separated(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: schedules.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 10),
+                        itemBuilder: (context, index) {
+                          final schedule = schedules[index];
+                          return _ScheduleTile(
+                            apiClient: widget.apiClient,
+                            schedule: schedule,
+                            selected: schedule.id == selectedId,
+                            onSelected: _refreshSelection,
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               ),
@@ -70,9 +97,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 }
 
 class _ScheduleTile extends StatelessWidget {
-  const _ScheduleTile({required this.schedule});
+  const _ScheduleTile({
+    required this.apiClient,
+    required this.schedule,
+    required this.selected,
+    required this.onSelected,
+  });
 
+  final ApiClient apiClient;
   final ExamSchedule schedule;
+  final bool selected;
+  final VoidCallback onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +119,12 @@ class _ScheduleTile extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => _ScheduleDetailScreen(schedule: schedule),
+              builder: (_) => _ScheduleDetailScreen(
+                apiClient: apiClient,
+                schedule: schedule,
+                selected: selected,
+                onSelected: onSelected,
+              ),
             ),
           );
         },
@@ -101,6 +141,11 @@ class _ScheduleTile extends StatelessWidget {
                     label: schedule.type,
                     icon: Icons.event_available_outlined,
                   ),
+                  if (selected)
+                    const InfoPill(
+                      label: 'Countdown Saya',
+                      icon: Icons.notifications_active_outlined,
+                    ),
                   if (schedule.location?.isNotEmpty == true)
                     InfoPill(
                       label: schedule.location!,
@@ -166,9 +211,17 @@ class _ScheduleTile extends StatelessWidget {
 }
 
 class _ScheduleDetailScreen extends StatelessWidget {
-  const _ScheduleDetailScreen({required this.schedule});
+  const _ScheduleDetailScreen({
+    required this.apiClient,
+    required this.schedule,
+    required this.selected,
+    required this.onSelected,
+  });
 
+  final ApiClient apiClient;
   final ExamSchedule schedule;
+  final bool selected;
+  final VoidCallback onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +241,11 @@ class _ScheduleDetailScreen extends StatelessWidget {
                   label: schedule.type,
                   icon: Icons.event_available_outlined,
                 ),
+                if (selected)
+                  const InfoPill(
+                    label: 'Countdown Saya',
+                    icon: Icons.notifications_active_outlined,
+                  ),
                 if (schedule.location?.isNotEmpty == true)
                   InfoPill(
                     label: schedule.location!,
@@ -254,6 +312,36 @@ class _ScheduleDetailScreen extends StatelessWidget {
                 ),
               ),
             ],
+            const SizedBox(height: 18),
+            FilledButton.icon(
+              onPressed: selected
+                  ? null
+                  : () async {
+                      try {
+                        await apiClient.selectMyExamSchedule(schedule.id);
+                        onSelected();
+                        if (!context.mounted) {
+                          return;
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Jadwal countdown dipilih.'),
+                          ),
+                        );
+                      } catch (error) {
+                        if (!context.mounted) {
+                          return;
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(error.toString())),
+                        );
+                      }
+                    },
+              icon: const Icon(Icons.notifications_active_outlined),
+              label: Text(
+                selected ? 'Countdown Aktif' : 'Jadikan Countdown Saya',
+              ),
+            ),
           ],
         ),
       ),

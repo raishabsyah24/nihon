@@ -6,8 +6,12 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from "@nestjs/common";
 import { QuestionType } from "@prisma/client";
+import { CurrentUser } from "../auth/current-user.decorator";
+import { FirebaseAuthGuard } from "../auth/firebase-auth.guard";
+import { RequestUser } from "../auth/request-user.type";
 import { ContentService } from "./content.service";
 import { AdminRoute } from "./admin-route";
 
@@ -23,6 +27,12 @@ export class SswController {
   @Get("ssw/modules/:id")
   getModule(@Param("id") id: string) {
     return this.content.getSswModule(id);
+  }
+
+  @Get("me/ssw/modules/:id")
+  @UseGuards(FirebaseAuthGuard)
+  getMyModule(@Param("id") id: string, @CurrentUser() user: RequestUser) {
+    return this.content.getSswModule(id, user.id);
   }
 
   @Get("admin/ssw/categories")

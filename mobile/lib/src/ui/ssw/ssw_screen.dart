@@ -129,6 +129,9 @@ class SswModuleDetailScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (_) => QuestionPracticeScreen(
                             title: 'Latihan ${module.title}',
+                            apiClient: apiClient,
+                            progressContentType: 'SSW_MODULE',
+                            progressContentId: module.id,
                             loader: () async => module.questions,
                             fallback: module.questions,
                           ),
@@ -143,12 +146,73 @@ class SswModuleDetailScreen extends StatelessWidget {
                     title: 'Soal latihan belum tersedia.',
                     icon: Icons.quiz_outlined,
                   ),
+                const SizedBox(height: 12),
+                _MarkModuleCompleteButton(
+                  apiClient: apiClient,
+                  module: module,
+                ),
               ],
             );
           },
         ),
       ),
     );
+  }
+}
+
+class _MarkModuleCompleteButton extends StatefulWidget {
+  const _MarkModuleCompleteButton({
+    required this.apiClient,
+    required this.module,
+  });
+
+  final ApiClient apiClient;
+  final SswModule module;
+
+  @override
+  State<_MarkModuleCompleteButton> createState() =>
+      _MarkModuleCompleteButtonState();
+}
+
+class _MarkModuleCompleteButtonState extends State<_MarkModuleCompleteButton> {
+  bool _saving = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.icon(
+      onPressed: _saving ? null : _markComplete,
+      icon: const Icon(Icons.check_circle_outline),
+      label: Text(_saving ? 'Menyimpan...' : 'Tandai Selesai Membaca'),
+    );
+  }
+
+  Future<void> _markComplete() async {
+    setState(() => _saving = true);
+    try {
+      await widget.apiClient.upsertProgress(
+        contentType: 'SSW_MODULE',
+        contentId: widget.module.id,
+        progressPercent: 100,
+        status: 'COMPLETED',
+      );
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Progress SSW tersimpan.')),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Progress belum tersimpan: $error')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _saving = false);
+      }
+    }
   }
 }
 

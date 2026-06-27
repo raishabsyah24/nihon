@@ -3,7 +3,13 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { ExamType, PublishStatus, QuestionType } from "@prisma/client";
+import {
+  ExamType,
+  PackageContentType,
+  ProductPackageKind,
+  PublishStatus,
+  QuestionType,
+} from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 
 type PrismaModel =
@@ -12,6 +18,7 @@ type PrismaModel =
   | "questionSet"
   | "sswCategory"
   | "sswModule"
+  | "studyMaterial"
   | "examSchedule"
   | "japanNews";
 
@@ -152,7 +159,7 @@ export class ContentService {
     });
   }
 
-  async getQuestionSet(id: string, type: QuestionType) {
+  async getQuestionSet(id: string, type: QuestionType, userId?: string) {
     const item = await this.prisma.questionSet.findFirst({
       where: {
         id,
@@ -171,7 +178,20 @@ export class ContentService {
       throw new NotFoundException("Question set not found.");
     }
 
-    return item;
+    const access = await this.resolveContentAccess(
+      [{ contentType: PackageContentType.QUESTION_SET, contentId: item.id }],
+      userId,
+    );
+    const lockedQuestionCount = access.hasAccess ? 0 : item.questions.length;
+
+    return {
+      ...item,
+      questions: access.hasAccess ? item.questions : [],
+      access: {
+        ...access,
+        lockedQuestionCount,
+      },
+    };
   }
 
   getSchedules(type?: ExamType) {
@@ -234,8 +254,8 @@ export class ContentService {
     });
   }
 
-  getSswModule(id: string) {
-    return this.prisma.sswModule.findFirstOrThrow({
+  async getSswModule(id: string, userId?: string) {
+    const item = await this.prisma.sswModule.findFirst({
       where: { id, status: PublishStatus.PUBLISHED },
       include: {
         category: true,
@@ -245,6 +265,62 @@ export class ContentService {
         },
       },
     });
+
+    if (!item) {
+      throw new NotFoundException("SSW module not found.");
+    }
+
+    const access = await this.resolveContentAccess(
+      [
+        { contentType: PackageContentType.SSW_MODULE, contentId: item.id },
+        {
+          contentType: PackageContentType.SSW_CATEGORY,
+          contentId: item.categoryId,
+        },
+      ],
+      userId,
+    );
+    const lockedQuestionCount = access.hasAccess ? 0 : item.questions.length;
+
+    return {
+      ...item,
+      questions: access.hasAccess ? item.questions : [],
+      access: {
+        ...access,
+        lockedQuestionCount,
+      },
+    };
+  }
+
+  async getStudyMaterial(idOrSlug: string, userId?: string) {
+    const item = await this.prisma.studyMaterial.findFirst({
+      where: {
+        status: PublishStatus.PUBLISHED,
+        OR: [{ id: idOrSlug }, { slug: idOrSlug }],
+      },
+    });
+
+    if (!item) {
+      throw new NotFoundException("Study material not found.");
+    }
+
+    const contentType =
+      item.kind === ProductPackageKind.JFT_MATERIAL
+        ? PackageContentType.JFT_MATERIAL
+        : PackageContentType.JLPT_MATERIAL;
+    const access = await this.resolveContentAccess(
+      [{ contentType, contentId: item.id }],
+      userId,
+    );
+
+    return {
+      ...item,
+      content: access.hasAccess ? item.content : null,
+      sections: access.hasAccess ? item.sections : [],
+      vocabulary: access.hasAccess ? item.vocabulary : [],
+      examples: access.hasAccess ? item.examples : [],
+      access,
+    };
   }
 
   private model(model: PrismaModel) {
@@ -255,6 +331,69 @@ export class ContentService {
       create(args: unknown): Promise<unknown>;
       update(args: unknown): Promise<unknown>;
       delete(args: unknown): Promise<unknown>;
+    };
+  }
+
+  private async resolveContentAccess(
+    lookups: Array<{ contentType: PackageContentType; contentId: string }>,
+    userId?: string,
+  ) {
+    const packageContents = await this.prisma.packageContent.findMany({
+      where: {
+        OR: lookups,
+        package: { status: PublishStatus.PUBLISHED },
+      },
+      include: { package: true },
+      orderBy: { sortOrder: "asc" },
+    });
+
+    const packages = Array.from(
+      new Map(
+        packageContents.map((content) => [
+          content.package.id,
+          {
+            id: content.package.id,
+            slug: content.package.slug,
+            title: content.package.title,
+            kind: content.package.kind,
+            level: content.package.level,
+            category: content.package.category,
+            price: content.package.price,
+            currency: content.package.currency,
+          },
+        ]),
+      ).values(),
+    );
+
+    if (packages.length === 0) {
+      return {
+        isFree: true,
+        hasAccess: true,
+        packages,
+      };
+    }
+
+    if (!userId) {
+      return {
+        isFree: false,
+        hasAccess: false,
+        packages,
+      };
+    }
+
+    const entitlement = await this.prisma.userEntitlement.findFirst({
+      where: {
+        userId,
+        packageId: { in: packages.map((item) => item.id) },
+        revokedAt: null,
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      },
+    });
+
+    return {
+      isFree: false,
+      hasAccess: Boolean(entitlement),
+      packages,
     };
   }
 }
@@ -268,6 +407,7 @@ type FieldKind =
   | "date"
   | "status"
   | "questionType"
+  | "materialKind"
   | "examType";
 
 type FieldRule = {
@@ -322,6 +462,19 @@ const contentRules: Record<PrismaModel, ModelRules> = {
     slug: { kind: "slug", required: true },
     summary: { kind: "string" },
     content: { kind: "string", required: true },
+    vocabulary: { kind: "jsonArray" },
+    examples: { kind: "jsonArray" },
+    status: { kind: "status" },
+  },
+  studyMaterial: {
+    kind: { kind: "materialKind", required: true },
+    title: { kind: "string", required: true },
+    slug: { kind: "slug", required: true },
+    level: { kind: "string" },
+    category: { kind: "string" },
+    summary: { kind: "string" },
+    content: { kind: "string", required: true },
+    sections: { kind: "jsonArray" },
     vocabulary: { kind: "jsonArray" },
     examples: { kind: "jsonArray" },
     status: { kind: "status" },
@@ -414,6 +567,11 @@ function normalizeField(
       return normalizeEnum(field, value, Object.values(PublishStatus));
     case "questionType":
       return normalizeEnum(field, value, Object.values(QuestionType));
+    case "materialKind":
+      return normalizeEnum(field, value, [
+        ProductPackageKind.JFT_MATERIAL,
+        ProductPackageKind.JLPT_MATERIAL,
+      ]);
     case "examType":
       return normalizeEnum(field, value, Object.values(ExamType));
   }

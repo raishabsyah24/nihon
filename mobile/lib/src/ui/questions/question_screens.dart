@@ -125,11 +125,19 @@ class QuestionPracticeScreen extends StatefulWidget {
     required this.title,
     required this.loader,
     this.fallback,
+    this.apiClient,
+    this.progressContentType,
+    this.progressContentId,
+    this.packageId,
   });
 
   final String title;
   final Future<List<QuestionItem>> Function() loader;
   final List<QuestionItem>? fallback;
+  final ApiClient? apiClient;
+  final String? progressContentType;
+  final String? progressContentId;
+  final String? packageId;
 
   @override
   State<QuestionPracticeScreen> createState() => _QuestionPracticeScreenState();
@@ -138,6 +146,7 @@ class QuestionPracticeScreen extends StatefulWidget {
 class _QuestionPracticeScreenState extends State<QuestionPracticeScreen> {
   final Map<String, int> _answers = {};
   bool _submitted = false;
+  bool _savingProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +178,11 @@ class _QuestionPracticeScreenState extends State<QuestionPracticeScreen> {
                     submitted: _submitted,
                   ),
                 ),
+                if (_savingProgress)
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: LinearProgressIndicator(),
+                  ),
                 Expanded(
                   child: ListView.separated(
                     padding: const EdgeInsets.all(16),
@@ -207,9 +221,9 @@ class _QuestionPracticeScreenState extends State<QuestionPracticeScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: FilledButton.icon(
-                          onPressed: questions.isEmpty
+                          onPressed: questions.isEmpty || _submitted
                               ? null
-                              : () => setState(() => _submitted = true),
+                              : () => _finishPractice(questions),
                           icon: const Icon(Icons.check_circle_outline),
                           label: const Text('Selesai'),
                         ),
@@ -223,6 +237,61 @@ class _QuestionPracticeScreenState extends State<QuestionPracticeScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _finishPractice(List<QuestionItem> questions) async {
+    final total = questions.length;
+    final answered = _answers.length;
+    final correct = questions
+        .where((question) => _answers[question.id] == question.answerIndex)
+        .length;
+    final score = total == 0 ? 0 : ((correct / total) * 100).round();
+    final progressPercent = total == 0
+        ? 0
+        : ((answered / total) * 100).round().clamp(0, 100).toInt();
+    final status = progressPercent >= 100 ? 'COMPLETED' : 'IN_PROGRESS';
+
+    setState(() {
+      _submitted = true;
+    });
+
+    final apiClient = widget.apiClient;
+    final contentType = widget.progressContentType;
+    final contentId = widget.progressContentId;
+    if (apiClient == null || contentType == null || contentId == null) {
+      return;
+    }
+
+    setState(() => _savingProgress = true);
+    try {
+      await apiClient.upsertProgress(
+        contentType: contentType,
+        contentId: contentId,
+        packageId: widget.packageId,
+        progressPercent: progressPercent,
+        status: status,
+        score: score,
+        bestScore: score,
+        attempts: 1,
+      );
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Progress tersimpan. Skor kamu $score.')),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Progress belum tersimpan: $error')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _savingProgress = false);
+      }
+    }
   }
 }
 

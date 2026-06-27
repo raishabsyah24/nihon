@@ -306,6 +306,12 @@ th {
   gap: 12px;
 }
 
+.two-columns {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .field {
   display: grid;
   gap: 6px;
@@ -412,6 +418,26 @@ th {
   color: var(--muted);
 }
 
+.status-pending {
+  background: #fff7e3;
+  color: #62460a;
+}
+
+.status-paid {
+  background: #e6f4ec;
+  color: var(--success);
+}
+
+.status-cancelled {
+  background: #fff2ef;
+  color: var(--danger);
+}
+
+.mini-list {
+  display: grid;
+  gap: 10px;
+}
+
 .mobile-menu {
   display: none;
 }
@@ -464,7 +490,8 @@ th {
   }
 
   .resource-layout,
-  .metrics-grid {
+  .metrics-grid,
+  .two-columns {
     grid-template-columns: 1fr;
   }
 }

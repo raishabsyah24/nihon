@@ -10,7 +10,7 @@ import {
   Save,
   Search,
   Trash2,
-  X
+  X,
 } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { apiFetch, type JsonRecord } from "@/lib/api";
@@ -23,7 +23,9 @@ type FormState = Record<string, string>;
 export function ResourcePage({ resource }: { resource: ResourceConfig }) {
   const { token } = useAuth();
   const [items, setItems] = useState<JsonRecord[]>([]);
-  const [form, setForm] = useState<FormState>(() => initialForm(resource.fields));
+  const [form, setForm] = useState<FormState>(() =>
+    initialForm(resource.fields),
+  );
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,7 +34,9 @@ export function ResourcePage({ resource }: { resource: ResourceConfig }) {
   const [error, setError] = useState<string | null>(null);
 
   const Icon = resource.icon;
-  const hasStatusField = resource.fields.some((field) => field.name === "status");
+  const hasStatusField = resource.fields.some(
+    (field) => field.name === "status",
+  );
 
   const loadItems = useCallback(async () => {
     setLoading(true);
@@ -59,7 +63,7 @@ export function ResourcePage({ resource }: { resource: ResourceConfig }) {
     }
 
     return items.filter((item) =>
-      JSON.stringify(item).toLowerCase().includes(needle)
+      JSON.stringify(item).toLowerCase().includes(needle),
     );
   }, [items, search]);
 
@@ -74,8 +78,8 @@ export function ResourcePage({ resource }: { resource: ResourceConfig }) {
         token,
         {
           method: editingId ? "PATCH" : "POST",
-          body: JSON.stringify(payload)
-        }
+          body: JSON.stringify(payload),
+        },
       );
       setForm(initialForm(resource.fields));
       setEditingId(null);
@@ -110,12 +114,12 @@ export function ResourcePage({ resource }: { resource: ResourceConfig }) {
     try {
       await apiFetch(`${resource.endpoint}/${id}`, token, {
         method: "PATCH",
-        body: JSON.stringify({ status: nextStatus })
+        body: JSON.stringify({ status: nextStatus }),
       });
       setItems((current) =>
         current.map((row) =>
-          String(row.id) === id ? { ...row, status: nextStatus } : row
-        )
+          String(row.id) === id ? { ...row, status: nextStatus } : row,
+        ),
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -141,7 +145,11 @@ export function ResourcePage({ resource }: { resource: ResourceConfig }) {
           <h1>{resource.title}</h1>
           <p className="muted">Kelola data {resource.title.toLowerCase()}.</p>
         </div>
-        <button className="btn btn-ghost" onClick={loadItems} disabled={loading}>
+        <button
+          className="btn btn-ghost"
+          onClick={loadItems}
+          disabled={loading}
+        >
           <RefreshCw size={18} />
           Refresh
         </button>
@@ -201,7 +209,9 @@ export function ResourcePage({ resource }: { resource: ResourceConfig }) {
                           <button
                             className="btn btn-ghost"
                             onClick={() => toggleStatus(item)}
-                            disabled={saving || statusUpdatingId === String(item.id)}
+                            disabled={
+                              saving || statusUpdatingId === String(item.id)
+                            }
                             title={
                               item.status === "PUBLISHED"
                                 ? "Jadikan draft"
@@ -259,7 +269,11 @@ export function ResourcePage({ resource }: { resource: ResourceConfig }) {
               <strong>{editingId ? "Edit" : "Tambah"}</strong>
             </div>
             {editingId ? (
-              <button className="btn btn-ghost" onClick={cancelEdit} type="button">
+              <button
+                className="btn btn-ghost"
+                onClick={cancelEdit}
+                type="button"
+              >
                 <X size={16} />
               </button>
             ) : null}
@@ -289,7 +303,7 @@ export function ResourcePage({ resource }: { resource: ResourceConfig }) {
 function FieldInput({
   field,
   value,
-  onChange
+  onChange,
 }: {
   field: ResourceField;
   value: string;
@@ -308,7 +322,9 @@ function FieldInput({
           value={value}
           onChange={(event) => onChange(event.target.value)}
         />
-      ) : field.kind === "vocabulary" || field.kind === "examples" ? (
+      ) : field.kind === "sections" ||
+        field.kind === "vocabulary" ||
+        field.kind === "examples" ? (
         <textarea
           className="textarea"
           id={id}
@@ -336,7 +352,13 @@ function FieldInput({
           className="input"
           id={id}
           required={field.required}
-          type={field.kind === "number" ? "number" : field.kind === "datetime" ? "datetime-local" : "text"}
+          type={
+            field.kind === "number"
+              ? "number"
+              : field.kind === "datetime"
+                ? "datetime-local"
+                : "text"
+          }
           value={value}
           onChange={(event) => onChange(event.target.value)}
         />
@@ -348,7 +370,7 @@ function FieldInput({
 
 function initialForm(fields: ResourceField[]) {
   return Object.fromEntries(
-    fields.map((field) => [field.name, field.name === "status" ? "DRAFT" : ""])
+    fields.map((field) => [field.name, field.name === "status" ? "DRAFT" : ""]),
   );
 }
 
@@ -358,6 +380,9 @@ function formFromItem(fields: ResourceField[], item: JsonRecord) {
       const value = item[field.name];
       if (field.kind === "lines" && Array.isArray(value)) {
         return [field.name, value.join("\n")];
+      }
+      if (field.kind === "sections" && Array.isArray(value)) {
+        return [field.name, value.map(formatSectionLine).join("\n")];
       }
       if (field.kind === "vocabulary" && Array.isArray(value)) {
         return [field.name, value.map(formatVocabularyLine).join("\n")];
@@ -369,7 +394,7 @@ function formFromItem(fields: ResourceField[], item: JsonRecord) {
         return [field.name, toDateTimeLocal(value)];
       }
       return [field.name, value == null ? "" : String(value)];
-    })
+    }),
   );
 }
 
@@ -380,6 +405,9 @@ function normalizePayload(fields: ResourceField[], form: FormState) {
         const raw = form[field.name]?.trim() ?? "";
         if (field.kind === "vocabulary") {
           return [field.name, raw ? parseVocabulary(raw) : []];
+        }
+        if (field.kind === "sections") {
+          return [field.name, raw ? parseSections(raw) : []];
         }
         if (field.kind === "examples") {
           return [field.name, raw ? parseExamples(raw) : []];
@@ -396,7 +424,7 @@ function normalizePayload(fields: ResourceField[], form: FormState) {
             raw
               .split("\n")
               .map((line) => line.trim())
-              .filter(Boolean)
+              .filter(Boolean),
           ];
         }
         if (field.kind === "datetime") {
@@ -404,7 +432,7 @@ function normalizePayload(fields: ResourceField[], form: FormState) {
         }
         return [field.name, raw];
       })
-      .filter(([, value]) => value !== null)
+      .filter(([, value]) => value !== null),
   );
 }
 
@@ -432,6 +460,10 @@ function renderCell(column: string, value: unknown) {
     return `${value.length} kosakata`;
   }
 
+  if (column === "sections" && Array.isArray(value)) {
+    return `${value.length} section`;
+  }
+
   if (column === "examples" && Array.isArray(value)) {
     return `${value.length} contoh`;
   }
@@ -439,18 +471,22 @@ function renderCell(column: string, value: unknown) {
   return stringifyCell(value);
 }
 
+function formatSectionLine(value: unknown) {
+  if (!isRecord(value)) {
+    return stringifyCell(value);
+  }
+
+  return [value.title, value.body]
+    .map((item) => (item == null ? "" : String(item)))
+    .join(" | ");
+}
+
 function formatVocabularyLine(value: unknown) {
   if (!isRecord(value)) {
     return stringifyCell(value);
   }
 
-  return [
-    value.kanji,
-    value.kana,
-    value.furigana,
-    value.romaji,
-    value.meaning
-  ]
+  return [value.kanji, value.kana, value.furigana, value.romaji, value.meaning]
     .map((item) => (item == null ? "" : String(item)))
     .join(" | ");
 }
@@ -463,6 +499,20 @@ function formatExampleLine(value: unknown) {
   return [value.japanese, value.furigana, value.romaji, value.meaning]
     .map((item) => (item == null ? "" : String(item)))
     .join(" | ");
+}
+
+function parseSections(raw: string) {
+  return raw
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [title, body] = line.split("|").map((item) => item.trim());
+      return {
+        title: title || null,
+        body: body || null,
+      };
+    });
 }
 
 function parseVocabulary(raw: string) {
@@ -479,7 +529,7 @@ function parseVocabulary(raw: string) {
         kana: kana || null,
         furigana: furigana || null,
         romaji: romaji || null,
-        meaning: meaning || null
+        meaning: meaning || null,
       };
     });
 }
@@ -497,7 +547,7 @@ function parseExamples(raw: string) {
         japanese: japanese || null,
         furigana: furigana || null,
         romaji: romaji || null,
-        meaning: meaning || null
+        meaning: meaning || null,
       };
     });
 }
