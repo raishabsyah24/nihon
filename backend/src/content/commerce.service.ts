@@ -555,29 +555,27 @@ export class CommerceService {
   }
 
   async settleMyDevPayment(user: RequestUser, id: string) {
-    return this.prisma.$transaction(async (tx) => {
-      const order = await tx.order.findFirst({
-        where: { id, userId: user.id },
-        include: { items: true },
-      });
-
-      if (!order) {
-        throw new NotFoundException("Order not found.");
-      }
-
-      if (order.status === OrderStatus.CANCELLED) {
-        throw new BadRequestException("Cancelled order cannot be paid.");
-      }
-
-      if (order.status === OrderStatus.PAID) {
-        return tx.order.findUnique({
-          where: { id },
-          include: orderInclude,
-        });
-      }
-
-      return this.markOrderPaid(tx, order, "XENDIT_DEV");
+    const order = await this.prisma.order.findFirst({
+      where: { id, userId: user.id },
+      include: { items: true },
     });
+
+    if (!order) {
+      throw new NotFoundException("Order not found.");
+    }
+
+    if (order.status === OrderStatus.CANCELLED) {
+      throw new BadRequestException("Cancelled order cannot be paid.");
+    }
+
+    if (order.status === OrderStatus.PAID) {
+      return this.prisma.order.findUnique({
+        where: { id },
+        include: orderInclude,
+      });
+    }
+
+    return this.markOrderPaid(this.prisma, order, "XENDIT_DEV");
   }
 
   listAdminOrders(query: Record<string, unknown>) {
@@ -604,49 +602,47 @@ export class CommerceService {
       Object.values(OrderStatus),
     );
 
-    return this.prisma.$transaction(async (tx) => {
-      const order = await tx.order.findUnique({
-        where: { id },
-        include: { items: true },
-      });
-
-      if (!order) {
-        throw new NotFoundException("Order not found.");
-      }
-
-      if (order.status === nextStatus) {
-        return tx.order.findUnique({
-          where: { id },
-          include: orderInclude,
-        });
-      }
-
-      if (nextStatus === OrderStatus.CANCELLED) {
-        if (order.status === OrderStatus.PAID) {
-          throw new BadRequestException("Paid order cannot be cancelled.");
-        }
-
-        const now = new Date();
-        return tx.order.update({
-          where: { id },
-          data: {
-            status: OrderStatus.CANCELLED,
-            cancelledAt: now,
-            metadata: mergePaymentMetadata(order.metadata, {
-              paymentStatus: "CANCELLED",
-              cancelledAt: now.toISOString(),
-            }),
-          },
-          include: orderInclude,
-        });
-      }
-
-      if (nextStatus !== OrderStatus.PAID) {
-        throw new BadRequestException("Only PAID or CANCELLED is allowed.");
-      }
-
-      return this.markOrderPaid(tx, order, "ADMIN_MANUAL");
+    const order = await this.prisma.order.findUnique({
+      where: { id },
+      include: { items: true },
     });
+
+    if (!order) {
+      throw new NotFoundException("Order not found.");
+    }
+
+    if (order.status === nextStatus) {
+      return this.prisma.order.findUnique({
+        where: { id },
+        include: orderInclude,
+      });
+    }
+
+    if (nextStatus === OrderStatus.CANCELLED) {
+      if (order.status === OrderStatus.PAID) {
+        throw new BadRequestException("Paid order cannot be cancelled.");
+      }
+
+      const now = new Date();
+      return this.prisma.order.update({
+        where: { id },
+        data: {
+          status: OrderStatus.CANCELLED,
+          cancelledAt: now,
+          metadata: mergePaymentMetadata(order.metadata, {
+            paymentStatus: "CANCELLED",
+            cancelledAt: now.toISOString(),
+          }),
+        },
+        include: orderInclude,
+      });
+    }
+
+    if (nextStatus !== OrderStatus.PAID) {
+      throw new BadRequestException("Only PAID or CANCELLED is allowed.");
+    }
+
+    return this.markOrderPaid(this.prisma, order, "ADMIN_MANUAL");
   }
 
   listAdminPromos(query: Record<string, unknown>) {

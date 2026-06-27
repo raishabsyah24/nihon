@@ -29,7 +29,7 @@ flutter run
 Default app mengarah ke backend production:
 
 ```txt
-https://nihon-jugqo9dwi-hexaclay.vercel.app
+https://nihon-phi.vercel.app
 ```
 
 Jika ingin override API saat development lokal, gunakan:
