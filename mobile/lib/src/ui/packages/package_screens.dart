@@ -163,7 +163,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
                   FilledButton.icon(
                     onPressed: () => _openContent(item),
                     icon: const Icon(Icons.lock_open_outlined),
-                    label: const Text('Buka Konten'),
+                    label: const Text('Buka Paket'),
                   )
                 else
                   FilledButton.icon(
@@ -229,8 +229,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
   }
 
   void _openContent(ProductPackage item) {
-    final content = item.contents.isEmpty ? null : item.contents.first;
-    if (content == null) {
+    if (item.contents.isEmpty) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => _MaterialPlaceholderScreen(
@@ -242,6 +241,48 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
       return;
     }
 
+    if (item.contents.length == 1) {
+      _openContentItem(item, item.contents.first);
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            children: [
+              Text(
+                'Pilih Konten',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 12),
+              for (final content in item.contents)
+                Card(
+                  child: ListTile(
+                    leading: Icon(_contentIcon(content.contentType)),
+                    title: Text(content.title ?? content.contentId),
+                    subtitle: Text(_contentTypeLabel(content.contentType)),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _openContentItem(item, content);
+                    },
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _openContentItem(ProductPackage item, PackageContent content) {
     if (content.contentType == 'QUESTION_SET') {
       final detailLoader = item.kind.startsWith('JFT')
           ? widget.apiClient.getMyJftQuestionSet
@@ -309,6 +350,26 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
       ),
     );
   }
+}
+
+IconData _contentIcon(String contentType) {
+  return switch (contentType) {
+    'QUESTION_SET' => Icons.quiz_outlined,
+    'SSW_MODULE' => Icons.work_outline,
+    'JFT_MATERIAL' => Icons.auto_stories_outlined,
+    'JLPT_MATERIAL' => Icons.auto_stories_outlined,
+    _ => Icons.layers_outlined,
+  };
+}
+
+String _contentTypeLabel(String contentType) {
+  return switch (contentType) {
+    'QUESTION_SET' => 'Latihan soal',
+    'SSW_MODULE' => 'Modul SSW',
+    'JFT_MATERIAL' => 'Materi JFT',
+    'JLPT_MATERIAL' => 'Materi JLPT',
+    _ => contentType,
+  };
 }
 
 String _orderCreatedMessage(OrderSummary order) {
@@ -968,9 +1029,9 @@ class _MaterialPlaceholderScreenState
 
 String packageKindLabel(String kind) {
   return switch (kind) {
-    'JFT_MATERIAL' => 'Materi JFT',
+    'JFT_MATERIAL' => 'Paket JFT',
     'JFT_QUESTION' => 'Soal JFT',
-    'JLPT_MATERIAL' => 'Materi JLPT',
+    'JLPT_MATERIAL' => 'Paket JLPT',
     'JLPT_QUESTION' => 'Soal JLPT',
     'SSW_QUESTION' => 'Soal SSW',
     _ => kind,

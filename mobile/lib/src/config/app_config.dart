@@ -1,7 +1,7 @@
 class AppConfig {
   static const apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'https://nihon-phi.vercel.app',
+    defaultValue: 'https://nihon-jugqo9dwi-hexaclay.vercel.app',
   );
 
   static const googleServerClientId = String.fromEnvironment(

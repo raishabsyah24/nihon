@@ -622,28 +622,37 @@ export class CommerceService {
       });
 
       for (const item of order.items) {
-        await tx.userEntitlement.upsert({
+        const entitlement = await tx.userEntitlement.findUnique({
           where: {
             userId_packageId: {
               userId: order.userId,
               packageId: item.packageId,
             },
           },
-          update: {
-            source: EntitlementSource.PURCHASE,
-            sourceOrderId: order.id,
-            startsAt: now,
-            expiresAt: null,
-            revokedAt: null,
-          },
-          create: {
-            userId: order.userId,
-            packageId: item.packageId,
-            source: EntitlementSource.PURCHASE,
-            sourceOrderId: order.id,
-            startsAt: now,
-          },
         });
+
+        if (entitlement) {
+          await tx.userEntitlement.update({
+            where: { id: entitlement.id },
+            data: {
+              source: EntitlementSource.PURCHASE,
+              sourceOrderId: order.id,
+              startsAt: now,
+              expiresAt: null,
+              revokedAt: null,
+            },
+          });
+        } else {
+          await tx.userEntitlement.create({
+            data: {
+              userId: order.userId,
+              packageId: item.packageId,
+              source: EntitlementSource.PURCHASE,
+              sourceOrderId: order.id,
+              startsAt: now,
+            },
+          });
+        }
       }
 
       await this.applyPaidOrderLoyalty(tx, order, pointsEarned);
@@ -1257,10 +1266,11 @@ export class CommerceService {
     },
     pointsEarned: number,
   ) {
-    let account = await tx.loyaltyAccount.upsert({
+    let account = await tx.loyaltyAccount.findUnique({
       where: { userId: order.userId },
-      update: {},
-      create: { userId: order.userId },
+    });
+    account ??= await tx.loyaltyAccount.create({
+      data: { userId: order.userId },
     });
     let balance = account.pointsBalance;
 

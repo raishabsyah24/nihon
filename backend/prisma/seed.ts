@@ -1154,18 +1154,23 @@ async function main() {
     {
       id: "seed-package-jft-material-a1",
       kind: "JFT_MATERIAL",
-      title: "Materi JFT Basic A1",
+      title: "Paket JFT Basic A1",
       slug: "jft-basic-a1-material",
-      subtitle: "Materi dasar untuk pemula",
+      subtitle: "Materi dan soal JFT Basic A1",
       previewDescription:
-        "Preview materi JFT Basic level awal untuk kosakata, pola kalimat, dan situasi harian.",
+        "Preview paket JFT Basic A1 untuk kosakata, pola kalimat, situasi harian, dan latihan soal.",
       description:
-        "Paket materi JFT Basic A1 berisi ringkasan pelajaran, contoh dialog, dan latihan pemahaman untuk fondasi awal.",
+        "Paket JFT Basic A1 berisi materi ringkas, contoh dialog, latihan soal, pembahasan, dan evaluasi kemampuan awal.",
       level: "A1",
       category: "JFT Basic",
-      price: 79000,
+      price: 99000,
       sortOrder: 10,
-      benefits: ["Materi ringkas", "Contoh dialog", "Progress belajar"],
+      benefits: [
+        "Materi ringkas",
+        "Latihan soal",
+        "Pembahasan",
+        "Progress belajar",
+      ],
       metadata: { access: "paid", productGroup: "jft" },
       status: "PUBLISHED",
       contents: [
@@ -1174,23 +1179,33 @@ async function main() {
           contentId: "jft-basic-a1-material",
           title: "Materi JFT Basic A1",
         },
+        {
+          contentType: "QUESTION_SET",
+          contentId: jftSet.id,
+          title: jftSet.title,
+        },
       ],
     },
     {
       id: "seed-package-jft-material-a2",
       kind: "JFT_MATERIAL",
-      title: "Materi JFT Basic A2",
+      title: "Paket JFT Basic A2",
       slug: "jft-basic-a2-material",
-      subtitle: "Materi JFT untuk target percakapan dasar",
+      subtitle: "Materi dan soal JFT Basic A2",
       previewDescription:
-        "Preview materi JFT Basic A2 untuk aktivitas harian, kerja, dan layanan publik.",
+        "Preview paket JFT Basic A2 untuk aktivitas harian, kerja, layanan publik, dan latihan soal.",
       description:
-        "Paket materi JFT Basic A2 membantu user memahami teks pendek, percakapan praktis, dan kosakata umum.",
+        "Paket JFT Basic A2 membantu user memahami teks pendek, percakapan praktis, kosakata umum, dan latihan kesiapan ujian.",
       level: "A2",
       category: "JFT Basic",
-      price: 89000,
+      price: 119000,
       sortOrder: 20,
-      benefits: ["Materi tematik", "Contoh soal ringan", "Progress belajar"],
+      benefits: [
+        "Materi tematik",
+        "Latihan soal",
+        "Pembahasan",
+        "Progress belajar",
+      ],
       metadata: { access: "paid", productGroup: "jft" },
       status: "PUBLISHED",
       contents: [
@@ -1199,23 +1214,33 @@ async function main() {
           contentId: "jft-basic-a2-material",
           title: "Materi JFT Basic A2",
         },
+        {
+          contentType: "QUESTION_SET",
+          contentId: jftA2Set.id,
+          title: jftA2Set.title,
+        },
       ],
     },
     {
       id: "seed-package-jft-material-b1",
       kind: "JFT_MATERIAL",
-      title: "Materi JFT Basic B1",
+      title: "Paket JFT Basic B1",
       slug: "jft-basic-b1-material",
-      subtitle: "Materi lanjutan untuk pemahaman kerja",
+      subtitle: "Materi dan soal JFT Basic B1",
       previewDescription:
-        "Preview materi JFT Basic B1 untuk instruksi, informasi kerja, dan komunikasi lebih panjang.",
+        "Preview paket JFT Basic B1 untuk instruksi, informasi kerja, komunikasi panjang, dan latihan soal.",
       description:
-        "Paket materi JFT Basic B1 menyiapkan user membaca informasi lebih kompleks dan memahami percakapan kerja.",
+        "Paket JFT Basic B1 menyiapkan user membaca informasi lebih kompleks, memahami percakapan kerja, dan mengukur kesiapan ujian.",
       level: "B1",
       category: "JFT Basic",
-      price: 99000,
+      price: 139000,
       sortOrder: 30,
-      benefits: ["Materi lanjutan", "Latihan pemahaman", "Progress belajar"],
+      benefits: [
+        "Materi lanjutan",
+        "Latihan soal",
+        "Pembahasan",
+        "Progress belajar",
+      ],
       metadata: { access: "paid", productGroup: "jft" },
       status: "PUBLISHED",
       contents: [
@@ -1224,23 +1249,33 @@ async function main() {
           contentId: "jft-basic-b1-material",
           title: "Materi JFT Basic B1",
         },
+        {
+          contentType: "QUESTION_SET",
+          contentId: jftB1Set.id,
+          title: jftB1Set.title,
+        },
       ],
     },
     {
       id: "seed-package-jft-material-b2",
       kind: "JFT_MATERIAL",
-      title: "Materi JFT Basic B2",
+      title: "Paket JFT Basic B2",
       slug: "jft-basic-b2-material",
-      subtitle: "Materi penguatan lanjutan",
+      subtitle: "Materi dan soal JFT Basic B2",
       previewDescription:
-        "Preview materi JFT Basic B2 untuk latihan pemahaman teks dan situasi yang lebih detail.",
+        "Preview paket JFT Basic B2 untuk pemahaman teks, situasi detail, dan latihan soal.",
       description:
-        "Paket materi JFT Basic B2 berisi penguatan bacaan, kosakata kerja, dan pemahaman situasi panjang.",
+        "Paket JFT Basic B2 berisi penguatan bacaan, kosakata kerja, pemahaman situasi panjang, latihan soal, dan evaluasi.",
       level: "B2",
       category: "JFT Basic",
-      price: 109000,
+      price: 159000,
       sortOrder: 40,
-      benefits: ["Materi penguatan", "Latihan bacaan", "Progress belajar"],
+      benefits: [
+        "Materi penguatan",
+        "Latihan soal",
+        "Pembahasan",
+        "Progress belajar",
+      ],
       metadata: { access: "paid", productGroup: "jft" },
       status: "PUBLISHED",
       contents: [
@@ -1248,6 +1283,11 @@ async function main() {
           contentType: "JFT_MATERIAL",
           contentId: "jft-basic-b2-material",
           title: "Materi JFT Basic B2",
+        },
+        {
+          contentType: "QUESTION_SET",
+          contentId: jftB2Set.id,
+          title: jftB2Set.title,
         },
       ],
     },
@@ -1267,7 +1307,7 @@ async function main() {
       sortOrder: 50,
       benefits: ["Latihan soal", "Pembahasan", "Riwayat nilai"],
       metadata: { access: "paid", productGroup: "jft" },
-      status: "PUBLISHED",
+      status: "DRAFT",
       contents: [
         {
           contentType: "QUESTION_SET",
@@ -1292,7 +1332,7 @@ async function main() {
       sortOrder: 60,
       benefits: ["Latihan soal", "Pembahasan", "Riwayat nilai"],
       metadata: { access: "paid", productGroup: "jft" },
-      status: "PUBLISHED",
+      status: "DRAFT",
       contents: [
         {
           contentType: "QUESTION_SET",
@@ -1317,7 +1357,7 @@ async function main() {
       sortOrder: 65,
       benefits: ["Latihan soal", "Pembahasan", "Riwayat nilai"],
       metadata: { access: "paid", productGroup: "jft" },
-      status: "PUBLISHED",
+      status: "DRAFT",
       contents: [
         {
           contentType: "QUESTION_SET",
@@ -1342,7 +1382,7 @@ async function main() {
       sortOrder: 66,
       benefits: ["Latihan soal", "Pembahasan", "Riwayat nilai"],
       metadata: { access: "paid", productGroup: "jft" },
-      status: "PUBLISHED",
+      status: "DRAFT",
       contents: [
         {
           contentType: "QUESTION_SET",
@@ -1354,18 +1394,18 @@ async function main() {
     {
       id: "seed-package-jlpt-material-n5",
       kind: "JLPT_MATERIAL",
-      title: "Materi JLPT N5",
+      title: "Paket JLPT N5",
       slug: "jlpt-n5-material",
-      subtitle: "Materi dasar JLPT N5",
+      subtitle: "Materi dan soal JLPT N5",
       previewDescription:
-        "Preview materi JLPT N5 untuk kotoba, bunpou, dokkai, dan choukai dasar.",
+        "Preview paket JLPT N5 untuk kotoba, bunpou, dokkai, choukai dasar, dan latihan soal.",
       description:
-        "Paket materi JLPT N5 membantu user membangun fondasi kosakata, pola kalimat, dan latihan membaca dasar.",
+        "Paket JLPT N5 membantu user membangun fondasi kosakata, pola kalimat, latihan membaca dasar, pembahasan, dan evaluasi.",
       level: "N5",
       category: "JLPT",
-      price: 89000,
+      price: 129000,
       sortOrder: 70,
-      benefits: ["Materi N5", "Peta belajar", "Progress belajar"],
+      benefits: ["Materi N5", "Latihan soal", "Pembahasan", "Progress belajar"],
       metadata: { access: "paid", productGroup: "jlpt" },
       status: "PUBLISHED",
       contents: [
@@ -1373,6 +1413,11 @@ async function main() {
           contentType: "JLPT_MATERIAL",
           contentId: "jlpt-n5-material",
           title: "Materi JLPT N5",
+        },
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN5Set.id,
+          title: jlptN5Set.title,
         },
       ],
     },
@@ -1392,7 +1437,7 @@ async function main() {
       sortOrder: 80,
       benefits: ["Latihan soal N5", "Pembahasan", "Riwayat nilai"],
       metadata: { access: "paid", productGroup: "jlpt" },
-      status: "PUBLISHED",
+      status: "DRAFT",
       contents: [
         {
           contentType: "QUESTION_SET",
@@ -1404,18 +1449,18 @@ async function main() {
     {
       id: "seed-package-jlpt-material-n4",
       kind: "JLPT_MATERIAL",
-      title: "Materi JLPT N4",
+      title: "Paket JLPT N4",
       slug: "jlpt-n4-material",
-      subtitle: "Materi lanjutan JLPT N4",
+      subtitle: "Materi dan soal JLPT N4",
       previewDescription:
-        "Preview materi JLPT N4 untuk kosakata, tata bahasa, dan bacaan pendek.",
+        "Preview paket JLPT N4 untuk kosakata, tata bahasa, bacaan pendek, dan latihan soal.",
       description:
-        "Paket materi JLPT N4 memperkuat pola kalimat, bacaan, dan pemahaman konteks sehari-hari.",
+        "Paket JLPT N4 memperkuat pola kalimat, bacaan, pemahaman konteks sehari-hari, dan evaluasi kesiapan ujian.",
       level: "N4",
       category: "JLPT",
-      price: 99000,
+      price: 149000,
       sortOrder: 90,
-      benefits: ["Materi N4", "Peta belajar", "Progress belajar"],
+      benefits: ["Materi N4", "Latihan soal", "Pembahasan", "Progress belajar"],
       metadata: { access: "paid", productGroup: "jlpt" },
       status: "PUBLISHED",
       contents: [
@@ -1423,6 +1468,11 @@ async function main() {
           contentType: "JLPT_MATERIAL",
           contentId: "jlpt-n4-material",
           title: "Materi JLPT N4",
+        },
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN4Set.id,
+          title: jlptN4Set.title,
         },
       ],
     },
@@ -1442,7 +1492,7 @@ async function main() {
       sortOrder: 100,
       benefits: ["Latihan soal N4", "Pembahasan", "Riwayat nilai"],
       metadata: { access: "paid", productGroup: "jlpt" },
-      status: "PUBLISHED",
+      status: "DRAFT",
       contents: [
         {
           contentType: "QUESTION_SET",
@@ -1454,18 +1504,18 @@ async function main() {
     {
       id: "seed-package-jlpt-material-n3",
       kind: "JLPT_MATERIAL",
-      title: "Materi JLPT N3",
+      title: "Paket JLPT N3",
       slug: "jlpt-n3-material",
-      subtitle: "Materi transisi menengah",
+      subtitle: "Materi dan soal JLPT N3",
       previewDescription:
-        "Preview materi JLPT N3 untuk bacaan, tata bahasa, dan kosakata menengah.",
+        "Preview paket JLPT N3 untuk bacaan, tata bahasa, kosakata menengah, dan latihan soal.",
       description:
-        "Paket materi JLPT N3 disiapkan untuk user yang naik dari N4 menuju bacaan dan struktur lebih kompleks.",
+        "Paket JLPT N3 disiapkan untuk user yang naik dari N4 menuju bacaan dan struktur lebih kompleks, lengkap dengan latihan soal.",
       level: "N3",
       category: "JLPT",
-      price: 119000,
+      price: 179000,
       sortOrder: 110,
-      benefits: ["Materi N3", "Peta belajar", "Progress belajar"],
+      benefits: ["Materi N3", "Latihan soal", "Pembahasan", "Progress belajar"],
       metadata: { access: "paid", productGroup: "jlpt" },
       status: "PUBLISHED",
       contents: [
@@ -1473,6 +1523,11 @@ async function main() {
           contentType: "JLPT_MATERIAL",
           contentId: "jlpt-n3-material",
           title: "Materi JLPT N3",
+        },
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN3Set.id,
+          title: jlptN3Set.title,
         },
       ],
     },
@@ -1492,7 +1547,7 @@ async function main() {
       sortOrder: 120,
       benefits: ["Latihan soal N3", "Pembahasan", "Riwayat nilai"],
       metadata: { access: "paid", productGroup: "jlpt" },
-      status: "PUBLISHED",
+      status: "DRAFT",
       contents: [
         {
           contentType: "QUESTION_SET",
@@ -1504,18 +1559,18 @@ async function main() {
     {
       id: "seed-package-jlpt-material-n2",
       kind: "JLPT_MATERIAL",
-      title: "Materi JLPT N2",
+      title: "Paket JLPT N2",
       slug: "jlpt-n2-material",
-      subtitle: "Materi lanjutan JLPT N2",
+      subtitle: "Materi dan soal JLPT N2",
       previewDescription:
-        "Preview materi JLPT N2 untuk bacaan panjang, ungkapan formal, dan kosakata luas.",
+        "Preview paket JLPT N2 untuk bacaan panjang, ungkapan formal, kosakata luas, dan latihan soal.",
       description:
-        "Paket materi JLPT N2 disiapkan untuk user yang mengejar kemampuan akademik dan kerja lebih kuat.",
+        "Paket JLPT N2 disiapkan untuk user yang mengejar kemampuan akademik dan kerja lebih kuat, lengkap dengan latihan soal.",
       level: "N2",
       category: "JLPT",
-      price: 139000,
+      price: 199000,
       sortOrder: 130,
-      benefits: ["Materi N2", "Peta belajar", "Progress belajar"],
+      benefits: ["Materi N2", "Latihan soal", "Pembahasan", "Progress belajar"],
       metadata: { access: "paid", productGroup: "jlpt" },
       status: "PUBLISHED",
       contents: [
@@ -1523,6 +1578,11 @@ async function main() {
           contentType: "JLPT_MATERIAL",
           contentId: "jlpt-n2-material",
           title: "Materi JLPT N2",
+        },
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN2Set.id,
+          title: jlptN2Set.title,
         },
       ],
     },
@@ -1542,7 +1602,7 @@ async function main() {
       sortOrder: 140,
       benefits: ["Latihan soal N2", "Pembahasan", "Riwayat nilai"],
       metadata: { access: "paid", productGroup: "jlpt" },
-      status: "PUBLISHED",
+      status: "DRAFT",
       contents: [
         {
           contentType: "QUESTION_SET",
@@ -1554,18 +1614,18 @@ async function main() {
     {
       id: "seed-package-jlpt-material-n1",
       kind: "JLPT_MATERIAL",
-      title: "Materi JLPT N1",
+      title: "Paket JLPT N1",
       slug: "jlpt-n1-material",
-      subtitle: "Materi mahir JLPT N1",
+      subtitle: "Materi dan soal JLPT N1",
       previewDescription:
-        "Preview materi JLPT N1 untuk teks kompleks, ungkapan abstrak, dan kosakata mahir.",
+        "Preview paket JLPT N1 untuk teks kompleks, ungkapan abstrak, kosakata mahir, dan latihan soal.",
       description:
-        "Paket materi JLPT N1 disiapkan untuk user tingkat mahir yang butuh latihan konsisten.",
+        "Paket JLPT N1 disiapkan untuk user tingkat mahir yang butuh materi, latihan soal, pembahasan, dan evaluasi konsisten.",
       level: "N1",
       category: "JLPT",
-      price: 159000,
+      price: 229000,
       sortOrder: 150,
-      benefits: ["Materi N1", "Peta belajar", "Progress belajar"],
+      benefits: ["Materi N1", "Latihan soal", "Pembahasan", "Progress belajar"],
       metadata: { access: "paid", productGroup: "jlpt" },
       status: "PUBLISHED",
       contents: [
@@ -1573,6 +1633,11 @@ async function main() {
           contentType: "JLPT_MATERIAL",
           contentId: "jlpt-n1-material",
           title: "Materi JLPT N1",
+        },
+        {
+          contentType: "QUESTION_SET",
+          contentId: jlptN1Set.id,
+          title: jlptN1Set.title,
         },
       ],
     },
@@ -1591,7 +1656,7 @@ async function main() {
       sortOrder: 160,
       benefits: ["Latihan soal N1", "Pembahasan", "Riwayat nilai"],
       metadata: { access: "paid", productGroup: "jlpt" },
-      status: "PUBLISHED",
+      status: "DRAFT",
       contents: [
         {
           contentType: "QUESTION_SET",

@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
         destination: PackageListScreen(
           title: 'JFT',
           apiClient: widget.apiClient,
-          kinds: const ['JFT_MATERIAL', 'JFT_QUESTION'],
+          kinds: const ['JFT_MATERIAL'],
         ),
       ),
       _HomeAction(
@@ -428,26 +428,23 @@ class _ExamTab extends StatelessWidget {
     final actions = [
       _HomeAction(
         title: 'JFT',
-        subtitle: 'Paket soal JFT Basic',
+        subtitle: 'Paket materi dan soal JFT Basic',
         icon: Icons.quiz_outlined,
         color: const Color(0xFFB4232A),
         group: _ActionGroup.exam,
         destination: PackageListScreen(
           title: 'Paket JFT',
           apiClient: apiClient,
-          kinds: const ['JFT_QUESTION'],
+          kinds: const ['JFT_MATERIAL'],
         ),
       ),
       _HomeAction(
         title: 'JLPT',
-        subtitle: 'Paket soal N5-N1',
+        subtitle: 'Paket materi dan soal N5-N1',
         icon: Icons.school_outlined,
         color: const Color(0xFFD79A2B),
         group: _ActionGroup.exam,
-        destination: _JlptPackageLevelScreen(
-          apiClient: apiClient,
-          questionOnly: true,
-        ),
+        destination: _JlptPackageLevelScreen(apiClient: apiClient),
       ),
       _HomeAction(
         title: 'SSW',
@@ -476,7 +473,9 @@ class _ExamTab extends StatelessWidget {
           emptyMessage: 'Belum ada paket soal yang aktif.',
           apiClient: apiClient,
           allowedKinds: const [
+            'JFT_MATERIAL',
             'JFT_QUESTION',
+            'JLPT_MATERIAL',
             'JLPT_QUESTION',
             'SSW_QUESTION',
           ],
@@ -1009,13 +1008,9 @@ class _CountdownDetail extends StatelessWidget {
 }
 
 class _JlptPackageLevelScreen extends StatelessWidget {
-  const _JlptPackageLevelScreen({
-    required this.apiClient,
-    this.questionOnly = false,
-  });
+  const _JlptPackageLevelScreen({required this.apiClient});
 
   final ApiClient apiClient;
-  final bool questionOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -1033,23 +1028,15 @@ class _JlptPackageLevelScreen extends StatelessWidget {
               child: ListTile(
                 leading: CircleAvatar(child: Text(level.substring(1))),
                 title: Text('JLPT $level'),
-                subtitle: Text(
-                  questionOnly
-                      ? 'Paket soal JLPT $level'
-                      : 'Materi dan soal JLPT $level',
-                ),
+                subtitle: Text('Paket materi dan soal JLPT $level'),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => PackageListScreen(
-                        title: questionOnly
-                            ? 'Soal JLPT $level'
-                            : 'Paket JLPT $level',
+                        title: 'Paket JLPT $level',
                         apiClient: apiClient,
-                        kinds: questionOnly
-                            ? const ['JLPT_QUESTION']
-                            : const ['JLPT_MATERIAL', 'JLPT_QUESTION'],
+                        kinds: const ['JLPT_MATERIAL'],
                         level: level,
                       ),
                     ),
